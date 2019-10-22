@@ -1,11 +1,11 @@
 
+import re
 
 keywords_components = ["Window", "Label", "List"]
 keywords_variables  = ["width", "height", "title", "caption", "data"]
 keywords_syntax = ["{", "}"]
 
 token_types = ["component", "variable", "obarce", "cbrace"]
-
 
 class Token:
     def __init__(self, type, value):
@@ -16,52 +16,36 @@ class Lexer:
     def __init__(self, code = ""):
         self.tokens = []
 
-        isValueAssigned = True
+        code = code.replace("\n", " ")
+        code = code.strip(" ")
+        code = re.sub(" +", " ", code)
         
-        for line in code.strip().split("\n"):
-            for word in line.split(" "):
+        word = ""
+        for c in code:
+            if c is "{":
+                self.tokens.append(Token("obrace", c))
+
+            if c is "}":
+                self.tokens.append(Token("cbrace", c))
+            
+            if c is " ": 
                 if word in keywords_components:
-                    self.tokens.append(Token("component", word))
-
-                if word == "{":
-                    self.tokens.append(Token("obrace", word))
-
-                if isValueAssigned is not True:
+                    self.tokens.append(Token("component", word.strip()))
+                elif word[:-1] in keywords_variables:
+                    self.tokens.append(Token("variable", word.strip()))
+                elif word.isdigit():
                     self.tokens[len(self.tokens)-1].value += word
-                    isValueAssigned = True
-                
-                if word[:-1] in keywords_variables:
-                    self.tokens.append(Token("variable", word))
-                    isValueAssigned = False
+                elif word not in keywords_syntax:
+                    self.tokens[len(self.tokens)-1].value += " " + word
 
-
-                if word == "}":
-                    self.tokens.append(Token("cbrace", word))
+                word = ""
+            else:
+                word += c
+        
 
         self.tokens.reverse()
 
     def nextToken(self):
         return self.tokens.pop()
 
-
-
-code = """
-
-Window {
-    title: "Title”
-    width:150
-    height: 150
-
-    Label { 
-        caption: "It's mine label"
-    }
-}
-
-"""
-
-lexer = Lexer(code)
-
-for i in range(len(lexer.tokens)):
-    token = lexer.nextToken()
-    print("<" + token.type + ", " + token.value + ">")
 
