@@ -41,11 +41,11 @@ class Lexer:
                 word = ""
             else:
                 word += c
-        
-
-        self.tokens.reverse()
 
     def nextToken(self):
         return self.tokens.pop()
 
+    def debug(self):
+        for i in range(len(self.tokens)):
+            print("<" + self.tokens[i].type + ", " + self.tokens[i].value + ">")
 
