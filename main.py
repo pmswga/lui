@@ -1,7 +1,9 @@
 
-"""It's main file for recognize lui"""
+"""It's main file for recognizing lui"""
 
-#import lexer
+import sys
+
+import compiler.lexer
 #import compiler
 #import generator
 

@@ -1,0 +1,11 @@
+
+Window {
+    title: "Window title"
+    width: 150
+    height: 150
+
+    Label {
+        caption: "it's label caption"
+    }
+
+}

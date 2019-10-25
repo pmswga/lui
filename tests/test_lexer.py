@@ -1,32 +1,21 @@
 
-import sys
 import unittest
 
-sys.path.insert(1, '../')
+from compiler.lexer import Lexer
 
-from lexer import *
 
 class TestLexer(unittest.TestCase):
-    def testMultilineCode(self):
-        code = """
-            Window {
-                title: "Title is mine”
-                width:  150
-                height: 150
-            }
-        """
-        lexer = Lexer(code)
+    def testGetTokens(self):
 
-        self.assertEqual(len(lexer.tokens), 6)
-            
-    def testInlineCode(self):
-        code = """
-            Window { title: "Title” width: 150 height: 150}
-        """
-        
+        with open("../examples/basic_1.lui") as f:
+            code = ""
+            for line in f.readlines():
+                code += line
+
         lexer = Lexer(code)
-        
-        self.assertEqual(len(lexer.tokens), 6)
+        lexer.parse()
+
+        self.assertEqual(len(lexer.tokens), 14)
 
 
 
