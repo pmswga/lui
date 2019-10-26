@@ -5,8 +5,7 @@ Window {
     height: 150
 
     Label {
-        caption: "Caption"
+        caption: "Label caption"
 
     }
-
 }

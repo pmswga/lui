@@ -11,12 +11,13 @@ class TokenTypes(enum.Enum):
     OBRACE = 4
     CBRACE = 5
 
-
 class Token:
     def __init__(self, type, data):
         self.type = type
         self.data = data
 
+    def __str__(self):
+        return "<" + str(self.type) + ", " + str(self.data) + ">"
 
 class LexerError(enum.Enum):
     INCORRECT_COMPONENT = 0
@@ -48,10 +49,13 @@ class Lexer:
     def isProperty(self, property):
         return re.match("^[a-z]+:$", property) is not None
 
-    def isPropertyValue(self, propertyValue):
-        return re.match("\d+", propertyValue) is not None or re.match("^\"[\S\w ]+\"$", propertyValue) is not None
+    def isPropertyIntValue(self, propertyValue):
+        return re.match("\d+", propertyValue) is not None
 
-    def error(self, code, data):
+    def isPropertyStrValue(self, propertyValue):
+        return  re.match("^\"[\S\w ]+\"$", propertyValue) is not None
+
+    def error(self, code, data): #TODO: По идеи, на этапе лексического анализа надо проверять ошибки
         if code is LexerError.INCORRECT_COMPONENT:
             raise LexerException("Incorrect component name: " + data)
         elif code is LexerError.INCORRECT_PROPERTY:
@@ -72,29 +76,35 @@ class Lexer:
                 token = token.lstrip(" ")
 
                 if self.isComponentName(token):
-                    self.tokens.append(token)
+                    self.tokens.append(Token(TokenTypes.COMPONENT, token))
 
                 if self.isOBrace(token):
-                    self.tokens.append(token)
+                    self.tokens.append(Token(TokenTypes.OBRACE, token))
 
                 if self.isProperty(token):
-                    self.tokens.append(token)
+                    self.tokens.append(Token(TokenTypes.PROPERTY, token))
 
-                if self.isPropertyValue(token):
-                    self.tokens.append(token)
+                if self.isPropertyStrValue(token):
+                    self.tokens.append(Token(TokenTypes.VALUE, token))
 
-                if self.isCBrace(token.lstrip(" ")):
-                    self.tokens.append(token)
+                if self.isPropertyIntValue(token):
+                    self.tokens.append(Token(TokenTypes.VALUE, int(token)))
+
+                if self.isCBrace(token):
+                    self.tokens.append(Token(TokenTypes.CBRACE, token))
 
                 token = ""
 
             token += c
 
-        if self.isCBrace(token.lstrip(" ")):
-            self.tokens.append(token)
+        if token is not "":
+            token = token.lstrip(" ")
+            if self.isCBrace(token):
+                self.tokens.append(Token(TokenTypes.CBRACE, token))
 
         return self.tokens
 
+"""
 
 with open("../examples/basic_1.lui") as f:
     code = ""
@@ -102,7 +112,9 @@ with open("../examples/basic_1.lui") as f:
         code += line
 
 lexer = Lexer(code)
+tokens = lexer.parse()
 
-# print("Source code: " + lexer.code)
+for token in tokens:
+    print(token)
 
-print(lexer.parse())
+"""
