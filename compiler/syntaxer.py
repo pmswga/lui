@@ -1,4 +1,4 @@
-from compiler.lexer import *
+from lexer import *
 from enum import Enum
 
 class ComponentProperty:
@@ -21,6 +21,7 @@ class ComponentNode:
     def toString(self, i):
         string = self.name
 
+
         for property in self.properties:
             string += "\n"
             for t in range(i):
@@ -28,8 +29,9 @@ class ComponentNode:
             string += "Property[" + str(property) + "]"
 
         for component in self.components:
+            string += "\n"
             for t in range(i):
-                string += "\n\t"
+                string += "\t"
             string += component.toString(i+1)
 
         return string
@@ -55,45 +57,37 @@ class Syntaxer:
     def __init__(self, tokens):
         self.tokens = tokens
         self.tokens.reverse()
+        self.ast = ComponentNode("", [], [])
 
     def error(self):
         raise NameError("LUI sytanx error")
 
-    def parseComponent(self):
+    def parseComponent(self, component):
         token = self.tokens.pop()
+        if token.type is not TokenTypes.OBRACE:
+            self.error()
 
-        componentList = []
-        component = None
+        self.parseProperty(component)
 
+        token = self.tokens.pop()
         while token.type is TokenTypes.COMPONENT:
-
+            subComponent = ComponentNode(token.data, [], [])
+            
             print("Component: " + token.data)
 
-            token = self.tokens.pop()
-            if token.type is not TokenTypes.OBRACE:
-                self.error()
+            self.parseComponent(subComponent)
 
-            self.parseProperty()
-
-            token = self.tokens.pop()
-            if token.type is TokenTypes.COMPONENT:
-                self.tokens.append(token)
-                self.parseComponent()
-            elif token.type is not TokenTypes.CBRACE:
-                self.error()
-
-            component.components.append(component)
+            component.components.append(subComponent)
             token = self.tokens.pop()
 
         self.tokens.append(token)
 
-        if len(componentList) > 1:
-            return componentList
-        else:
-            component
+        token = self.tokens.pop()
+        if token.type is not TokenTypes.CBRACE:
+            self.error()
 
 
-    def parseProperty(self):
+    def parseProperty(self, component):
         token = tokens.pop()
 
         propertyList = []
@@ -106,74 +100,72 @@ class Syntaxer:
             if token.type is  TokenTypes.VALUE:
                 property.value = token.data
 
-            propertyList.append(property)
+            component.properties.append(property)
             token = self.tokens.pop()
 
         self.tokens.append(token)
-
-        return propertyList
 
     def parse(self):
         token = self.tokens.pop()
         if token.type is not TokenTypes.COMPONENT and token.data not in windowComponent.keys():
             self.error()
 
-        mainComponent = ComponentNode(token.data, [], [])
+        self.ast.name = token.data
         print("Component: " + token.data)
 
         token = self.tokens.pop()
         if token.type is not TokenTypes.OBRACE:
             self.error()
 
-        mainComponent.properties = self.parseProperty()
+        self.parseProperty(self.ast)
 
         token = self.tokens.pop()
         while token.type is TokenTypes.COMPONENT:
             component = ComponentNode(token.data, [], [])
             print("Component: " + token.data)
 
-            token = self.tokens.pop()
-            if token.type is not TokenTypes.OBRACE:
-                self.error()
+            self.parseComponent(component)
 
-            component.properties = self.parseProperty()
-
-            token = self.tokens.pop()
-            if token.type is TokenTypes.COMPONENT:
-                self.tokens.append(token)
-                component.components = self.parseComponent()
-            elif token.type is not TokenTypes.CBRACE:
-                self.error()
-
-            mainComponent.components.append(component)
+            self.ast.components.append(component)
             token = self.tokens.pop()
 
         self.tokens.append(token)
 
+        token = self.tokens.pop()
         if token.type is not TokenTypes.CBRACE:
             self.error()
 
-        return mainComponent
+        return self.ast
 
 
 
 
 c = ComponentProperty("caption", "Caption")
 propertiesLabel = [c]
-
 l = ComponentNode("Label", propertiesLabel)
+
+cButton = ComponentProperty("caption" , "Caption")
+propertiesButton = [cButton]
+b = ComponentNode("Button", propertiesButton)
+
+
+row = ComponentNode("Row", [], [l, b])
+
+grid2 = ComponentNode("Grid", [], [row])
 
 t = ComponentProperty("title", "Title")
 w = ComponentProperty("width", 150)
 h = ComponentProperty("height", 150)
 
 propertiesWindow = [t, w, h]
-m = ComponentNode("Window", propertiesWindow, [l])
+m = ComponentNode("Window", propertiesWindow, [grid2])
 
 with open("../examples/basic_1.lui") as f:
     code = ""
     for line in f.readlines():
         code += line
+
+print(code)
 
 lexer = Lexer(code)
 tokens = lexer.parse()
@@ -185,5 +177,7 @@ ast = syntaxer.parse()
 print("\n\n")
 print(ast)
 
-#print(m)
+
+print("\n\n")
+print(m)
 
