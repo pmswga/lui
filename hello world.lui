@@ -1,0 +1,6 @@
+
+Window {
+	title: "It's mine"
+	width: 500
+	height: 500
+}

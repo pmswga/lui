@@ -1,7 +1,7 @@
 
 import unittest
 
-from compiler.lexer import *
+from translator.lexer import *
 
 
 class TestLexer(unittest.TestCase):

@@ -23,6 +23,7 @@ class LexerError(enum.Enum):
     INCORRECT_COMPONENT = 0
     INCORRECT_PROPERTY = 1
     INCORRECT_VALUE = 2
+    UNCLOSED_BRACE = 3
 
 class LexerException(Exception):
     def __init__(self, message):
@@ -63,9 +64,21 @@ class Lexer:
         elif code is LexerError.INCORRECT_VALUE:
             raise LexerException("Incorrect property value: " + data)
 
+    def parseBraces(self):
+        stackBraces = []
+        for c in self.code:
+            if c is "{":
+                stackBraces.append("{")
+            elif c is "}":
+                stackBraces.pop()
+
+        return len(stackBraces) == 0
 
     def parse(self):
         token = ""
+
+        if not self.parseBraces(): # TODO: Реализовать нормальную проверку на ошибки
+            self.error(LexerError.UNCLOSED_BRACE, "")
 
         isQuotes = False
         for c in self.code:
@@ -82,7 +95,7 @@ class Lexer:
                     self.tokens.append(Token(TokenTypes.OBRACE, token))
 
                 if self.isProperty(token):
-                    self.tokens.append(Token(TokenTypes.PROPERTY, token))
+                    self.tokens.append(Token(TokenTypes.PROPERTY, token[:-1]))
 
                 if self.isPropertyStrValue(token):
                     self.tokens.append(Token(TokenTypes.VALUE, token))

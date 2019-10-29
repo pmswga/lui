@@ -4,20 +4,8 @@ Window {
     width: 150
     height: 150
 
-    Grid {
-        Label {
-            caption: "Hello"
-        }
-
-        Button {
-            caption: "Button"
-
-            Some {
-                test: "it"
-            }
-        }
-
-    }
-
+	Label {
+		caption: "Hello, Lui"
+	}
 
 }
