@@ -5,18 +5,19 @@ Window {
     height: 150
 
     Grid {
-
-        row: 15
-        col: 15
-
-       Label {
+        Label {
             caption: "Hello"
-       }
+        }
 
         Button {
             caption: "Button"
+
+            Some {
+                test: "it"
+            }
         }
 
     }
+
 
 }
