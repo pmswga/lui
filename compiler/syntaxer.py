@@ -60,53 +60,100 @@ class Syntaxer:
         raise NameError("LUI sytanx error")
 
     def parseComponent(self):
+        token = self.tokens.pop()
 
-        component = ComponentNode("", [], [])
+        componentList = []
+        component = None
 
-        return component
+        while token.type is TokenTypes.COMPONENT:
+
+            print("Component: " + token.data)
+
+            token = self.tokens.pop()
+            if token.type is not TokenTypes.OBRACE:
+                self.error()
+
+            self.parseProperty()
+
+            token = self.tokens.pop()
+            if token.type is TokenTypes.COMPONENT:
+                self.tokens.append(token)
+                self.parseComponent()
+            elif token.type is not TokenTypes.CBRACE:
+                self.error()
+
+            component.components.append(component)
+            token = self.tokens.pop()
+
+        self.tokens.append(token)
+
+        if len(componentList) > 1:
+            return componentList
+        else:
+            component
+
 
     def parseProperty(self):
-
-        if len(self.tokens) == 0:
-            return []
-
-        property = ComponentProperty("", "")
-
         token = tokens.pop()
-        if token.type is TokenTypes.PROPERTY:
-            property.name = token.data
 
-        token = self.tokens.pop()
-        if token.type is  TokenTypes.VALUE:
-            property.value = token.data
+        propertyList = []
+        while token.type is TokenTypes.PROPERTY:
+            property = ComponentProperty(token.data, "")
 
-        return [property]
+            print("Property: " + token.data)
+
+            token = self.tokens.pop()
+            if token.type is  TokenTypes.VALUE:
+                property.value = token.data
+
+            propertyList.append(property)
+            token = self.tokens.pop()
+
+        self.tokens.append(token)
+
+        return propertyList
 
     def parse(self):
-        ast = None
-
         token = self.tokens.pop()
-
         if token.type is not TokenTypes.COMPONENT and token.data not in windowComponent.keys():
             self.error()
 
-        ast = ComponentNode(token.data, [], [])
+        mainComponent = ComponentNode(token.data, [], [])
+        print("Component: " + token.data)
 
         token = self.tokens.pop()
         if token.type is not TokenTypes.OBRACE:
             self.error()
 
-        ast.properties = self.parseProperty()
-        ast.components = self.parseComponent()
+        mainComponent.properties = self.parseProperty()
 
         token = self.tokens.pop()
+        while token.type is TokenTypes.COMPONENT:
+            component = ComponentNode(token.data, [], [])
+            print("Component: " + token.data)
+
+            token = self.tokens.pop()
+            if token.type is not TokenTypes.OBRACE:
+                self.error()
+
+            component.properties = self.parseProperty()
+
+            token = self.tokens.pop()
+            if token.type is TokenTypes.COMPONENT:
+                self.tokens.append(token)
+                component.components = self.parseComponent()
+            elif token.type is not TokenTypes.CBRACE:
+                self.error()
+
+            mainComponent.components.append(component)
+            token = self.tokens.pop()
+
+        self.tokens.append(token)
+
         if token.type is not TokenTypes.CBRACE:
-            pass
-            # self.error()
+            self.error()
 
-        print("Create base component with properties and sub componenents")
-
-        return ast
+        return mainComponent
 
 
 
@@ -132,7 +179,11 @@ lexer = Lexer(code)
 tokens = lexer.parse()
 
 syntaxer = Syntaxer(tokens)
-#print(syntaxer.parse())
 
-print(m)
+ast = syntaxer.parse()
+
+print("\n\n")
+print(ast)
+
+#print(m)
 

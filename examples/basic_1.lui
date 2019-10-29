@@ -4,8 +4,18 @@ Window {
     width: 150
     height: 150
 
-    Label {
-        caption: "Caption"
+    Grid {
+
+        row: 15
+        col: 15
+
+       Label {
+            caption: "Hello"
+       }
+
+        Button {
+            caption: "Button"
+        }
 
     }
 
