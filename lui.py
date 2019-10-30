@@ -26,4 +26,5 @@ if len(sys.argv) > 1:
     generator = TkGenerator(ast)
 
     generator.generate()
-
+else:
+    print("No input file")

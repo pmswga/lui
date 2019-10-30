@@ -9,6 +9,11 @@ class TkGenerator:
         self.ast = ast
         self.code = []
 
+    def genLabel(self, component):
+        self.code.append("label = Label(window)")
+        self.code.append("label['text'] = " + component.properties[0].value)
+        self.code.append("label.pack()")
+
     def genWindow(self):
 
         for property in self.ast.properties:
@@ -19,6 +24,9 @@ class TkGenerator:
             elif property.name == "height":
                 self.code.append("window['height'] = " + str(property.value))
 
+        for component in self.ast.components:
+            if component.name == "Label":
+                self.genLabel(component)
 
 
     def generate(self):

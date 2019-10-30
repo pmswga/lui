@@ -1,8 +1,9 @@
 from translator.lexer import *
 from enum import Enum
 
+
 class ComponentProperty:
-    def __init__(self, name, value = None):
+    def __init__(self, name, value=None):
         self.name = name
         self.value = value
 
@@ -21,7 +22,6 @@ class ComponentNode:
     def toString(self, i):
         string = self.name
 
-
         for property in self.properties:
             string += "\n"
             for t in range(i):
@@ -32,12 +32,13 @@ class ComponentNode:
             string += "\n"
             for t in range(i):
                 string += "\t"
-            string += component.toString(i+1)
+            string += component.toString(i + 1)
 
         return string
 
     def __str__(self):
         return self.toString(1)
+
 
 # Types of component
 
@@ -59,7 +60,7 @@ class Syntaxer:
         self.tokens.reverse()
         self.ast = ComponentNode("", [], [])
 
-    def error(self, code = None):
+    def error(self, code=None):
         raise NameError("LUI syntax error")
 
     def parseComponent(self, component):
@@ -84,14 +85,13 @@ class Syntaxer:
         if token.type is not TokenTypes.CBRACE:
             self.error()
 
-
     def parseProperty(self, component):
         token = self.tokens.pop()
         while token.type is TokenTypes.PROPERTY:
             property = ComponentProperty(token.data)
 
             token = self.tokens.pop()
-            if token.type is  TokenTypes.VALUE:
+            if token.type is TokenTypes.VALUE:
                 property.value = token.data
 
             component.properties.append(property)
@@ -141,7 +141,6 @@ class Syntaxer:
             self.error()
 
         return self.ast
-
 
 
 """

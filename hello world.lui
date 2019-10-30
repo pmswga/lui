@@ -1,6 +1,10 @@
 
 Window {
-	title: "It's mine"
+	title: "Window app"
 	width: 500
 	height: 500
+
+	Label {
+	    caption: "Hello, Lui"
+	}
 }
