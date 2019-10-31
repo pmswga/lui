@@ -1,0 +1,20 @@
+
+h1, p {
+    font-family: Open-Sans;
+}
+
+.lui-header {
+    display: flex;
+    margin: auto;
+}
+
+.lui-header h1 {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 32px;
+    font-style: italic;
+}
+
+.lui-advantages h3 {
+    text-align: center;
+}
