@@ -41,12 +41,6 @@ class Lexer:
     def isComponentName(self, componentName):
         return re.match("^[A-Z][a-z]+$", componentName) is not None
 
-    def isOBrace(self, obrace):
-        return obrace is "{"
-
-    def isCBrace(self, cbrace):
-        return cbrace is "}"
-
     def isProperty(self, property):
         return re.match("^[a-z]+:$", property) is not None
 
@@ -54,7 +48,10 @@ class Lexer:
         return re.match("\d+", propertyValue) is not None
 
     def isPropertyStrValue(self, propertyValue):
-        return  re.match("^\"[\S\w ]+\"$", propertyValue) is not None
+        return re.match("^\"[\S\w ]+\"$", propertyValue) is not None
+
+    def isPropertyVarValue(self, propertyValue): # TODO: Add regex of property var
+        return re.match("^[a-zA-z]+[a-zA-Z0-9_]*$", propertyValue) is not None
 
     def error(self, code, data): #TODO: По идеи, на этапе лексического анализа надо проверять ошибки
         if code is LexerError.INCORRECT_COMPONENT:
@@ -63,6 +60,8 @@ class Lexer:
             raise LexerException("Incorrect property name: " + data)
         elif code is LexerError.INCORRECT_VALUE:
             raise LexerException("Incorrect property value: " + data)
+        elif code is LexerError.UNCLOSED_BRACE:
+            raise LexerException("Unclosed brace" + data)
 
     def parseBraces(self):
         stackBraces = []
@@ -77,11 +76,20 @@ class Lexer:
     def parse(self):
         token = ""
 
-        if not self.parseBraces(): # TODO: Реализовать нормальную проверку на ошибки
+        if self.parseBraces() is False: # TODO: Реализовать нормальную проверку на ошибки
             self.error(LexerError.UNCLOSED_BRACE, "")
 
         isQuotes = False
         for c in self.code:
+
+            if c is "{":
+                self.tokens.append(Token(TokenTypes.OBRACE, "{"))
+                token = ""
+
+            if c is "}":
+                self.tokens.append(Token(TokenTypes.CBRACE, "}"))
+                token = ""
+
             if c is "\"":
                 isQuotes = not isQuotes if True else False
 
@@ -90,44 +98,33 @@ class Lexer:
 
                 if self.isComponentName(token):
                     self.tokens.append(Token(TokenTypes.COMPONENT, token))
-
-                if self.isOBrace(token):
-                    self.tokens.append(Token(TokenTypes.OBRACE, token))
-
-                if self.isProperty(token):
+                elif self.isProperty(token):
                     self.tokens.append(Token(TokenTypes.PROPERTY, token[:-1]))
-
-                if self.isPropertyStrValue(token):
+                elif self.isPropertyStrValue(token):
                     self.tokens.append(Token(TokenTypes.VALUE, token))
-
-                if self.isPropertyIntValue(token):
+                elif self.isPropertyIntValue(token):
                     self.tokens.append(Token(TokenTypes.VALUE, int(token)))
-
-                if self.isCBrace(token):
-                    self.tokens.append(Token(TokenTypes.CBRACE, token))
+                elif self.isPropertyVarValue(token):
+                    self.tokens.append(Token(TokenTypes.VALUE, token))
 
                 token = ""
 
             token += c
 
-        if token is not "":
-            token = token.lstrip(" ")
-            if self.isCBrace(token):
-                self.tokens.append(Token(TokenTypes.CBRACE, token))
-
         return self.tokens
-
 """
+try:
 
-with open("../examples/basic_1.lui") as f:
-    code = ""
-    for line in f.readlines():
-        code += line
+    with open("../examples/basic_1.lui") as f:
+        code = ""
+        for line in f.readlines():
+            code += line
 
-lexer = Lexer(code)
-tokens = lexer.parse()
+    lexer = Lexer(code)
+    tokens = lexer.parse()
 
-for token in tokens:
-    print(token)
-
+    for token in tokens:
+        print(token)
+except LexerException as e:
+    print(e)
 """
