@@ -1,33 +1,21 @@
-# lui Lexer
+# @package lui Lexer
 
-import enum
+from enum import Enum
+from translator.lexer.token import *
 import re
 
 
-class TokenTypes(enum.Enum):
-    COMPONENT = 1
-    PROPERTY = 2
-    VALUE = 3
-    OBRACE = 4
-    CBRACE = 5
-
-class Token:
-    def __init__(self, type, data):
-        self.type = type
-        self.data = data
-
-    def __str__(self):
-        return "<" + str(self.type) + ", " + str(self.data) + ">"
-
-class LexerError(enum.Enum):
+class LexerError(Enum):
     INCORRECT_COMPONENT = 0
     INCORRECT_PROPERTY = 1
     INCORRECT_VALUE = 2
     UNCLOSED_BRACE = 3
 
+
 class LexerException(Exception):
     def __init__(self, message):
         Exception.__init__(self, message)
+
 
 class Lexer:
     def __init__(self, code=""):
@@ -44,10 +32,10 @@ class Lexer:
     def isProperty(self, property):
         return re.match("^[a-z]+:$", property) is not None
 
-    def isPropertyIntValue(self, propertyValue):
+    def isPropertyNumberValue(self, propertyValue):
         return re.match("\d+", propertyValue) is not None
 
-    def isPropertyStrValue(self, propertyValue):
+    def isPropertyStringValue(self, propertyValue):
         return re.match("^\"[\S\w ]+\"$", propertyValue) is not None
 
     def isPropertyVarValue(self, propertyValue): # TODO: Add regex of property var
@@ -83,11 +71,11 @@ class Lexer:
         for c in self.code:
 
             if c is "{":
-                self.tokens.append(Token(TokenTypes.OBRACE, "{"))
+                self.tokens.append(Token(TokenType.OBRACE, "{"))
                 token = ""
 
             if c is "}":
-                self.tokens.append(Token(TokenTypes.CBRACE, "}"))
+                self.tokens.append(Token(TokenType.CBRACE, "}"))
                 token = ""
 
             if c is "\"":
@@ -97,34 +85,18 @@ class Lexer:
                 token = token.lstrip(" ")
 
                 if self.isComponentName(token):
-                    self.tokens.append(Token(TokenTypes.COMPONENT, token))
+                    self.tokens.append(Token(TokenType.COMPONENT, token))
                 elif self.isProperty(token):
-                    self.tokens.append(Token(TokenTypes.PROPERTY, token[:-1]))
-                elif self.isPropertyStrValue(token):
-                    self.tokens.append(Token(TokenTypes.VALUE, token))
-                elif self.isPropertyIntValue(token):
-                    self.tokens.append(Token(TokenTypes.VALUE, int(token)))
+                    self.tokens.append(Token(TokenType.PROPERTY_NAME, token[:-1]))
+                elif self.isPropertyStringValue(token):
+                    self.tokens.append(Token(TokenType.PROPERTY_STRING_VALUE, token))
+                elif self.isPropertyNumberValue(token):
+                    self.tokens.append(Token(TokenType.PROPERTY_NUMBER_VALUE, int(token)))
                 elif self.isPropertyVarValue(token):
-                    self.tokens.append(Token(TokenTypes.VALUE, token))
+                    self.tokens.append(Token(TokenType.PROPERTY_VAR_NAME, token))
 
                 token = ""
 
             token += c
 
         return self.tokens
-"""
-try:
-
-    with open("../examples/basic_1.lui") as f:
-        code = ""
-        for line in f.readlines():
-            code += line
-
-    lexer = Lexer(code)
-    tokens = lexer.parse()
-
-    for token in tokens:
-        print(token)
-except LexerException as e:
-    print(e)
-"""

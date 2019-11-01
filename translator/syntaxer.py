@@ -1,6 +1,5 @@
-from translator.lexer import *
-from enum import Enum
 
+from translator.lexer.token import TokenType
 
 class ComponentProperty:
     def __init__(self, name, value=None):
@@ -65,13 +64,13 @@ class Syntaxer:
 
     def parseComponent(self, component):
         token = self.tokens.pop()
-        if token.type is not TokenTypes.OBRACE:
+        if token.type is not TokenType.OBRACE:
             self.error()
 
         self.parseProperty(component)
 
         token = self.tokens.pop()
-        while token.type is TokenTypes.COMPONENT:
+        while token.type is TokenType.COMPONENT:
             subComponent = ComponentNode(token.data, [], [])
 
             self.parseComponent(subComponent)
@@ -82,16 +81,16 @@ class Syntaxer:
         self.tokens.append(token)
 
         token = self.tokens.pop()
-        if token.type is not TokenTypes.CBRACE:
+        if token.type is not TokenType.CBRACE:
             self.error()
 
     def parseProperty(self, component):
         token = self.tokens.pop()
-        while token.type is TokenTypes.PROPERTY:
+        while token.type is TokenType.PROPERTY_NAME:
             property = ComponentProperty(token.data)
 
             token = self.tokens.pop()
-            if token.type is TokenTypes.VALUE:
+            if token.type in [TokenType.PROPERTY_NUMBER_VALUE, TokenType.PROPERTY_STRING_VALUE, TokenType.PROPERTY_VAR_NAME]:
                 property.value = token.data
 
             component.properties.append(property)
@@ -105,9 +104,9 @@ class Syntaxer:
 
         while len(braceTokens) > 0:
             token = braceTokens.pop()
-            if token.type is TokenTypes.OBRACE:
+            if token.type is TokenType.OBRACE:
                 braceStack.append("{")
-            elif token.type is TokenTypes.CBRACE:
+            elif token.type is TokenType.CBRACE:
                 braceStack.pop()
 
         return len(braceStack) == 0
@@ -117,19 +116,19 @@ class Syntaxer:
             self.error()
 
         token = self.tokens.pop()
-        if token.type is not TokenTypes.COMPONENT or token.data not in windowComponent.keys():
+        if token.type is not TokenType.COMPONENT or token.data not in windowComponent.keys():
             self.error()
 
         self.ast.name = token.data
 
         token = self.tokens.pop()
-        if token.type is not TokenTypes.OBRACE:
+        if token.type is not TokenType.OBRACE:
             self.error()
 
         self.parseProperty(self.ast)
 
         token = self.tokens.pop()
-        while token.type is TokenTypes.COMPONENT:
+        while token.type is TokenType.COMPONENT:
             component = ComponentNode(token.data, [], [])
 
             self.parseComponent(component)
@@ -137,7 +136,7 @@ class Syntaxer:
             self.ast.components.append(component)
             token = self.tokens.pop()
 
-        if token.type is not TokenTypes.CBRACE:
+        if token.type is not TokenType.CBRACE:
             self.error()
 
         return self.ast

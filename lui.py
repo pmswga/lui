@@ -1,6 +1,6 @@
 
 import sys
-from  translator.lexer import *
+from translator.lexer.lexer import *
 from  translator.syntaxer import *
 from  translator.generator import *
 
