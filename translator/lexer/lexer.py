@@ -20,7 +20,15 @@ class LexerException(Exception):
 class Lexer:
     def __init__(self, code=""):
         self.tokens = []
-        self.code = code
+        self.code = ""
+        self.other_code = ""
+
+        if code.find("#LUI") != -1:
+            self.other_code = code.split("#LUI")[0]
+            self.code = code.split("#LUI")[1]
+        else:
+            self.code = code
+
         self.code = re.sub("\n", " ", self.code)
         self.code = re.sub("\t", " ", self.code)
         self.code = re.sub(" +", " ", self.code)
@@ -30,7 +38,7 @@ class Lexer:
         return re.match("^[A-Z][a-z]+$", componentName) is not None
 
     def isProperty(self, property):
-        return re.match("^[a-z]+:$", property) is not None
+        return re.match("^[a-z]+[a-z-]+:$", property) is not None
 
     def isPropertyNumberValue(self, propertyValue):
         return re.match("\d+", propertyValue) is not None
@@ -38,10 +46,10 @@ class Lexer:
     def isPropertyStringValue(self, propertyValue):
         return re.match("^\"[\S\w ]+\"$", propertyValue) is not None
 
-    def isPropertyVarValue(self, propertyValue): # TODO: Add regex of property var
+    def isPropertyVarValue(self, propertyValue):  # TODO: Add regex of property var
         return re.match("^[a-zA-z]+[a-zA-Z0-9_]*$", propertyValue) is not None
 
-    def error(self, code, data): #TODO: По идеи, на этапе лексического анализа надо проверять ошибки
+    def error(self, code, data):  # TODO: По идеи, на этапе лексического анализа надо проверять ошибки
         if code is LexerError.INCORRECT_COMPONENT:
             raise LexerException("Incorrect component name: " + data)
         elif code is LexerError.INCORRECT_PROPERTY:
@@ -64,7 +72,7 @@ class Lexer:
     def parse(self):
         token = ""
 
-        if self.parseBraces() is False: # TODO: Реализовать нормальную проверку на ошибки
+        if self.parseBraces() is False:  # TODO: Реализовать нормальную проверку на ошибки
             self.error(LexerError.UNCLOSED_BRACE, "")
 
         isQuotes = False
@@ -93,10 +101,14 @@ class Lexer:
                 elif self.isPropertyNumberValue(token):
                     self.tokens.append(Token(TokenType.PROPERTY_NUMBER_VALUE, int(token)))
                 elif self.isPropertyVarValue(token):
-                    self.tokens.append(Token(TokenType.PROPERTY_VAR_NAME, token))
+                    self.tokens.append(Token(TokenType.PROPERTY_VAR_VALUE, token))
 
                 token = ""
 
             token += c
 
         return self.tokens
+
+    def debug(self):
+        for token in self.tokens:
+            print(token)

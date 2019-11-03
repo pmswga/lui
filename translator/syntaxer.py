@@ -1,5 +1,7 @@
 
 from translator.lexer.token import TokenType
+from translator.lui_definition import *
+
 
 class ComponentProperty:
     def __init__(self, name, value=None):
@@ -7,7 +9,7 @@ class ComponentProperty:
         self.value = value
 
     def __str__(self):
-        return self.name + " " + str(self.value)
+        return self.name + ": " + str(self.value)
 
 
 class ComponentNode:
@@ -39,20 +41,6 @@ class ComponentNode:
         return self.toString(1)
 
 
-# Types of component
-
-windowComponent = {
-    "Window": ["title", "width", "height"]
-}
-
-viewComponent = {
-    "Label": ["caption"]
-}
-
-
-# ==========================
-
-
 class Syntaxer:
     def __init__(self, tokens):
         self.tokens = tokens
@@ -60,6 +48,7 @@ class Syntaxer:
         self.ast = ComponentNode("", [], [])
 
     def error(self, code=None):
+        #print("LUI syntax error")
         raise NameError("LUI syntax error")
 
     def parseComponent(self, component):
@@ -90,7 +79,7 @@ class Syntaxer:
             property = ComponentProperty(token.data)
 
             token = self.tokens.pop()
-            if token.type in [TokenType.PROPERTY_NUMBER_VALUE, TokenType.PROPERTY_STRING_VALUE, TokenType.PROPERTY_VAR_NAME]:
+            if token.type in [TokenType.PROPERTY_NUMBER_VALUE, TokenType.PROPERTY_STRING_VALUE, TokenType.PROPERTY_VAR_VALUE]:
                 property.value = token.data
 
             component.properties.append(property)
@@ -98,25 +87,9 @@ class Syntaxer:
 
         self.tokens.append(token)
 
-    def parseBraces(self):
-        braceTokens = self.tokens.copy()
-        braceStack = []
-
-        while len(braceTokens) > 0:
-            token = braceTokens.pop()
-            if token.type is TokenType.OBRACE:
-                braceStack.append("{")
-            elif token.type is TokenType.CBRACE:
-                braceStack.pop()
-
-        return len(braceStack) == 0
-
     def parse(self):
-        if not self.parseBraces():
-            self.error()
-
         token = self.tokens.pop()
-        if token.type is not TokenType.COMPONENT or token.data not in windowComponent.keys():
+        if token.type is not TokenType.COMPONENT or token.data not in components["windowComponent"].keys():
             self.error()
 
         self.ast.name = token.data
@@ -140,6 +113,9 @@ class Syntaxer:
             self.error()
 
         return self.ast
+
+    def debug(self):
+        print(self.ast)
 
 
 """

@@ -3,11 +3,29 @@
 #
 
 
-windowComponent = {
-    "Window": ["title", "width", "height"]
+components = {
+
+    "properties": ["width", "height", "background-color"],
+
+    "windowComponent": {
+        "Window": ["title"]
+    },
+
+    "layoutComponent": {
+        "Grid": ["rows", "cols"]
+    },
+
+    "inputComponent": {
+        "Button": ["caption"]
+    },
+
+    "viewComponent": {
+        "Label": ["caption"],
+        "List": ["data"]
+    }
+
 }
 
-viewComponent = {
-    "Label": ["caption"]
-}
+
+
 
