@@ -18,21 +18,10 @@ class LexerException(Exception):
 
 
 class Lexer:
-    def __init__(self, code=""):
+    def __init__(self):
         self.tokens = []
-        self.code = ""
-        self.other_code = ""
-
-        if code.find("#LUI") != -1:
-            self.other_code = code.split("#LUI")[0]
-            self.code = code.split("#LUI")[1]
-        else:
-            self.code = code
-
-        self.code = re.sub("\n", " ", self.code)
-        self.code = re.sub("\t", " ", self.code)
-        self.code = re.sub(" +", " ", self.code)
-        self.code = self.code.strip()
+        self.lui_code = ""
+        self.user_code = ""
 
     def isComponentName(self, componentName):
         return re.match("^[A-Z][a-z]+$", componentName) is not None
@@ -61,7 +50,7 @@ class Lexer:
 
     def parseBraces(self):
         stackBraces = []
-        for c in self.code:
+        for c in self.lui_code:
             if c is "{":
                 stackBraces.append("{")
             elif c is "}":
@@ -76,7 +65,7 @@ class Lexer:
             self.error(LexerError.UNCLOSED_BRACE, "")
 
         isQuotes = False
-        for c in self.code:
+        for c in self.lui_code:
 
             if c is "{":
                 self.tokens.append(Token(TokenType.OBRACE, "{"))
@@ -107,8 +96,11 @@ class Lexer:
 
             token += c
 
+        self.tokens.reverse()
         return self.tokens
 
     def debug(self):
-        for token in self.tokens:
+        tokens = self.tokens.copy()
+        tokens.reverse()
+        for token in tokens:
             print(token)

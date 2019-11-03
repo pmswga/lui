@@ -16,12 +16,22 @@ components = {
     },
 
     "inputComponent": {
-        "Button": ["caption"]
+        "Button": ["caption"],
+        "Radio": [],
+        "Checkbox": [],
+        "Combobox": [],
+        "Spinbox": [],
+        "Range": [],
+        "Line": [],
+        "Text": []
     },
 
     "viewComponent": {
         "Label": ["caption"],
-        "List": ["data"]
+        "List": ["data"],
+        "Table": [],
+        "Tree": [],
+        "Slider": []
     }
 
 }

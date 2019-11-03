@@ -1,24 +1,12 @@
-
 from translator.lexer.token import TokenType
 from translator.lui_definition import *
 
 
-class ComponentProperty:
-    def __init__(self, name, value=None):
-        self.name = name
-        self.value = value
-
-    def __str__(self):
-        return self.name + ": " + str(self.value)
-
-
 class ComponentNode:
-    def __init__(self, name, properties, components=None):
-        if components is None:
-            components = []
+    def __init__(self, name):
         self.name = name
-        self.properties = properties
-        self.components = components
+        self.properties = {}
+        self.components = []
 
     def toString(self, i):
         string = self.name
@@ -27,7 +15,7 @@ class ComponentNode:
             string += "\n"
             for t in range(i):
                 string += "\t"
-            string += "Property[" + str(property) + "]"
+            string += "Property[" + str(self.properties[property]) + "]"
 
         for component in self.components:
             string += "\n"
@@ -42,14 +30,13 @@ class ComponentNode:
 
 
 class Syntaxer:
-    def __init__(self, tokens):
-        self.tokens = tokens
-        self.tokens.reverse()
-        self.ast = ComponentNode("", [], [])
+    def __init__(self):
+        self.tokens = []
+        self.st = ComponentNode("")
 
     def error(self, code=None):
-        #print("LUI syntax error")
-        raise NameError("LUI syntax error")
+        # print("LUI syntax error")
+        raise Exception("LUI syntax error")
 
     def parseComponent(self, component):
         token = self.tokens.pop()
@@ -60,7 +47,7 @@ class Syntaxer:
 
         token = self.tokens.pop()
         while token.type is TokenType.COMPONENT:
-            subComponent = ComponentNode(token.data, [], [])
+            subComponent = ComponentNode(token.data)
 
             self.parseComponent(subComponent)
 
@@ -76,13 +63,13 @@ class Syntaxer:
     def parseProperty(self, component):
         token = self.tokens.pop()
         while token.type is TokenType.PROPERTY_NAME:
-            property = ComponentProperty(token.data)
+            property = token.data
 
             token = self.tokens.pop()
-            if token.type in [TokenType.PROPERTY_NUMBER_VALUE, TokenType.PROPERTY_STRING_VALUE, TokenType.PROPERTY_VAR_VALUE]:
-                property.value = token.data
+            if token.type in [TokenType.PROPERTY_NUMBER_VALUE, TokenType.PROPERTY_STRING_VALUE,
+                              TokenType.PROPERTY_VAR_VALUE]:
+                component.properties[property] = token.data
 
-            component.properties.append(property)
             token = self.tokens.pop()
 
         self.tokens.append(token)
@@ -92,50 +79,27 @@ class Syntaxer:
         if token.type is not TokenType.COMPONENT or token.data not in components["windowComponent"].keys():
             self.error()
 
-        self.ast.name = token.data
+        self.st.name = token.data
 
         token = self.tokens.pop()
         if token.type is not TokenType.OBRACE:
             self.error()
 
-        self.parseProperty(self.ast)
+        self.parseProperty(self.st)
 
         token = self.tokens.pop()
         while token.type is TokenType.COMPONENT:
-            component = ComponentNode(token.data, [], [])
+            component = ComponentNode(token.data)
 
             self.parseComponent(component)
 
-            self.ast.components.append(component)
+            self.st.components.append(component)
             token = self.tokens.pop()
 
         if token.type is not TokenType.CBRACE:
             self.error()
 
-        return self.ast
+        return self.st
 
     def debug(self):
-        print(self.ast)
-
-
-"""
-c = ComponentProperty("caption", "Caption")
-propertiesLabel = [c]
-l = ComponentNode("Label", propertiesLabel)
-
-cButton = ComponentProperty("caption" , "Caption")
-propertiesButton = [cButton]
-b = ComponentNode("Button", propertiesButton)
-
-
-row = ComponentNode("Row", [], [l, b])
-
-grid2 = ComponentNode("Grid", [], [row])
-
-t = ComponentProperty("title", "Title")
-w = ComponentProperty("width", 150)
-h = ComponentProperty("height", 150)
-
-propertiesWindow = [t, w, h]
-m = ComponentNode("Window", propertiesWindow, [grid2])
-"""
+        print(self.st)

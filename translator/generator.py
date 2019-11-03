@@ -1,7 +1,6 @@
 # Generator
 
 from translator.syntaxer import ComponentNode
-from translator.syntaxer import ComponentProperty
 
 
 # TODO: ПЕРЕПИСАТЬ ВСЁ К ЧЕРТЯМ СОБАЧИМ!
@@ -10,46 +9,61 @@ class TkGenerator:
     def __init__(self, ast, other_code=""):
         self.ast = ast
         self.code = []
-        self.locals = ()
-        self.other_code = other_code.split("\n")
+        self.locals = {}
+        self.other_code = other_code
+
+    def debug(self):
+        print("Locals:")
+        print(self.locals)
+        print("User code:")
+        print(self.other_code)
 
     def isList(self, lst):
         return isinstance(lst, list)
 
     def getList(self, component):
 
-        dataProperty = self.locals[component.properties[0].value]
+        dataProperty = None
+        for property in component.properties.keys():
+            if property == "data":
+                dataProperty = self.locals[component.properties[property]]
 
         self.code.append("listbox = Listbox(window)")
 
-
         if isinstance(dataProperty, list):
-            self.code.append("for item in " + component.properties[0].value + ":")
+            self.code.append("for item in " + component.properties[property] + ":")
             self.code.append("\tlistbox.insert(END, item)")
 
         self.code.append("listbox.pack()")
 
     def genButton(self, component):
+
         self.code.append("button = Button(window)")
-        self.code.append("button['text'] = " + component.properties[0].value)
+        for property in component.properties.keys():
+            if property == "caption":
+                self.code.append("button['text'] = " + component.properties.get(property))
         self.code.append("button.pack()")
 
     def genLabel(self, component):
         self.code.append("label = Label(window)")
-        self.code.append("label['text'] = " + component.properties[0].value)
+
+        for property in component.properties.keys():
+            if property == "caption":
+                self.code.append("label['text'] = " + component.properties.get(property))
+
         self.code.append("label.pack()")
 
     def genWindow(self):
 
-        for property in self.ast.properties:
-            if property.name == "title":
-                self.code.append("window.title(" + property.value + ")")
-            elif property.name == "width":
-                self.code.append("window['width'] = " + str(property.value))
-            elif property.name == "height":
-                self.code.append("window['height'] = " + str(property.value))
-            elif property.name == "background-color":
-                self.code.append("window['bg'] = " + str(property.value))
+        for property in self.ast.properties.keys():
+            if property == "title":
+                self.code.append("window.title(" + self.ast.properties[property] + ")")
+            elif property == "width":
+                self.code.append("window['width'] = " + str(self.ast.properties[property]))
+            elif property == "height":
+                self.code.append("window['height'] = " + str(self.ast.properties[property]))
+            elif property == "background-color":
+                self.code.append("window['bg'] = " + str(self.ast.properties[property]))
 
         for component in self.ast.components:
             if component.name == "Label":
@@ -60,15 +74,14 @@ class TkGenerator:
                 self.getList(component)
 
     def generate(self):
-        self.code.append("from tkinter import *")
+        self.code.append(self.other_code)
 
-
-        for line in self.other_code:
-            exec(line)
-            self.code.append(line)
-
+        exec("import sys")
+        exec("sys.path.append(\".\")")
+        exec(self.other_code)
         self.locals = locals()
 
+        self.code.append("from tkinter import *")
         self.code.append("window = Tk()")
 
         self.genWindow()

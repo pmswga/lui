@@ -1,70 +1,23 @@
+from app import *
 
-import sys
-from translator.lexer.lexer import *
-from translator.syntaxer import *
-from translator.generator import *
-
-# Lui cmd args
-# --file=path
-# --debug
-# --help
-
-path = ""
-isDebug = False
-
+app = LuiApp()
 if len(sys.argv) > 1:
-    for arg in sys.argv:
-        if arg.find("--file=") != -1:
-            path = arg.split("=")[1]
+    try:
+        for arg in sys.argv:
+            if arg.find("--file=") != -1:
+                app.fileCommand(arg)
 
-        if arg.find("--debug") != -1:
-            isDebug = True
+            if arg.find("--debug") != -1:
+                app.debugCommand()
 
-        if arg.find("--help") != -1:
-            print("List of lui cmd args:")
-            print("\t --help        - view list of lui cmd args")
-            print("\t --file=[path] - select path to *.lui file")
-            print("\t --debug       - turn on debug mode")
+            if arg.find("--help") != -1:
+                app.helpCommand()
 
-            sys.exit(0)
+            if arg.find("--version") != -1:
+                app.versionCommand()
 
-    if path != "":
-        with open(path) as f:
-            code = ""
-            for line in f.readlines():
-                code += line
-
-        if isDebug:
-            print("File path: \"" + path + "\"")
-            print("Debug mode: on")
-
-
-        lexer = Lexer(code)
-        tokens = lexer.parse()
-
-        if isDebug:
-            print("\nList of tokens:\n")
-            lexer.debug()
-            print("\n")
-
-        syntaxer = Syntaxer(tokens)
-        ast = syntaxer.parse()
-
-        if isDebug:
-            print("\nAbstract syntax tree of lui code:\n")
-            syntaxer.debug()
-            print("\n")
-
-        #print("\n\n")
-        #print(ast)
-
-        generator = TkGenerator(ast, lexer.other_code)
-
-        generator.generate()
-    else:
-        print("No input file")
+        app.run()
+    except Exception as e:
+        pass
 else:
-    print("List of lui cmd args:")
-    print("\t --help        - view list of lui cmd args")
-    print("\t --file=[path] - select path to *.lui file")
-    print("\t --debug       - turn on debug mode")
+    app.helpCommand()
