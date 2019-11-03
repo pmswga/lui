@@ -1,19 +1,8 @@
 
-import runpy
 
-def isList():
-    code = "[1, 2, 3, 4, 5, 6, 7]"
+import random
 
-    res = exec(code)
+lst = []
 
-    print(res)
-
-    if isinstance(res, list):
-        print("Nice")
-
-
-lst = eval("[1, 2, 3, 4, 5]")
-
-print(lst)
-
-#isList()
+for i in range(15):
+    lst.append(random.randint(0, 100))

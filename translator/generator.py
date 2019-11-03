@@ -10,6 +10,7 @@ class TkGenerator:
     def __init__(self, ast, other_code=""):
         self.ast = ast
         self.code = []
+        self.locals = ()
         self.other_code = other_code.split("\n")
 
     def isList(self, lst):
@@ -17,12 +18,12 @@ class TkGenerator:
 
     def getList(self, component):
 
+        dataProperty = self.locals[component.properties[0].value]
+
         self.code.append("listbox = Listbox(window)")
 
-        print(self.other_code[1])
-        lst = eval(self.other_code[1].split("=")[1])
 
-        if isinstance(lst, list):
+        if isinstance(dataProperty, list):
             self.code.append("for item in " + component.properties[0].value + ":")
             self.code.append("\tlistbox.insert(END, item)")
 
@@ -55,13 +56,18 @@ class TkGenerator:
                 self.genLabel(component)
             if component.name == "Button":
                 self.genButton(component)
-            #if component.name == "List":
-            #    self.getList(component)
+            if component.name == "List":
+                self.getList(component)
 
     def generate(self):
         self.code.append("from tkinter import *")
+
+
         for line in self.other_code:
+            exec(line)
             self.code.append(line)
+
+        self.locals = locals()
 
         self.code.append("window = Tk()")
 

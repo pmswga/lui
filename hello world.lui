@@ -1,24 +1,29 @@
 
-my = "Click me"
+from test import *
 
-#GUI
+lst_2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+#LUI
 
 Window {
 	title: "Window app"
 	width: 500
 	height: 500
-	background-color: "skyblue"
 
-	Label {
-	    caption: "List of values"
-	}
+    Label {
+        caption: "List of values 1"
+    }
 
-	Button {
-		caption: my
-	}
+    List {
+        data: lst
+    }
 
-	List {
-	    data: lst
-	}
+    Label {
+        caption: "List of values 1"
+    }
+
+    List {
+        data: lst_2
+    }
 
 }
