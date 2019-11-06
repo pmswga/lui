@@ -6,17 +6,17 @@ from translator.syntaxer import ComponentNode
 # TODO: ПЕРЕПИСАТЬ ВСЁ К ЧЕРТЯМ СОБАЧИМ!
 
 class TkGenerator:
-    def __init__(self, ast, other_code=""):
-        self.ast = ast
+    def __init__(self,):
+        self.st = None
         self.code = []
         self.locals = {}
-        self.other_code = other_code
+        self.user_code = ""
 
     def debug(self):
         print("Locals:")
         print(self.locals)
         print("User code:")
-        print(self.other_code)
+        print(self.user_code)
 
     def isList(self, lst):
         return isinstance(lst, list)
@@ -55,17 +55,17 @@ class TkGenerator:
 
     def genWindow(self):
 
-        for property in self.ast.properties.keys():
+        for property in self.st.properties.keys():
             if property == "title":
-                self.code.append("window.title(" + self.ast.properties[property] + ")")
+                self.code.append("window.title(" + self.st.properties[property] + ")")
             elif property == "width":
-                self.code.append("window['width'] = " + str(self.ast.properties[property]))
+                self.code.append("window['width'] = " + str(self.st.properties[property]))
             elif property == "height":
-                self.code.append("window['height'] = " + str(self.ast.properties[property]))
+                self.code.append("window['height'] = " + str(self.st.properties[property]))
             elif property == "background-color":
-                self.code.append("window['bg'] = " + str(self.ast.properties[property]))
+                self.code.append("window['bg'] = " + str(self.st.properties[property]))
 
-        for component in self.ast.components:
+        for component in self.st.components:
             if component.name == "Label":
                 self.genLabel(component)
             if component.name == "Button":
@@ -74,19 +74,22 @@ class TkGenerator:
                 self.getList(component)
 
     def generate(self):
-        self.code.append(self.other_code)
+        if self.st is not None:
+            self.code.append(self.user_code)
 
-        exec("import sys")
-        exec("sys.path.append(\".\")")
-        exec(self.other_code)
-        self.locals = locals()
+            exec("import sys")
+            exec("sys.path.append(\".\")")
+            exec(self.user_code)
+            self.locals = locals()
 
-        self.code.append("from tkinter import *")
-        self.code.append("window = Tk()")
+            self.code.append("from tkinter import *")
+            self.code.append("window = Tk()")
 
-        self.genWindow()
+            self.genWindow()
 
-        self.code.append("window.mainloop()")
+            self.code.append("window.mainloop()")
 
-        with open("tmp.py", "w") as f:
-            f.write("\n".join(self.code))
+            with open("tmp.py", "w") as f:
+                f.write("\n".join(self.code))
+        else:
+            raise Exception("Generate code error")

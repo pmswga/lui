@@ -1,41 +1,17 @@
-import lst
-import random
 
-listModel   = lst.List()
-lstPositive = lst.List()
-lstOther    = lst.List()
-
-for i in range(10):
-    listModel.append( float(random.randint(-100, 100)) )
-
-for index in range(listModel.size):
-    if listModel.at(index) > 0:
-        lstPositive.append(listModel.at(index))
-    else:
-        lstOther.append(listModel.at(index))
-
-list_s = []
-list_p = []
-list_o = []
-
-for i in range(listModel.size):
-    list_s.append(listModel.at(i))
-
-for i in range(lstPositive.size):
-    list_p.append(lstPositive.at(i))
-
-for i in range(lstOther.size):
-    list_o.append(lstOther.at(i))
+lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 
 from tkinter import *
 window = Tk()
-window.title("Lab 1")
+window.title("Window app")
+window['width'] = 500
+window['height'] = 500
 label = Label(window)
-label['text'] = "Source list"
+label['text'] = "List values"
 label.pack()
 listbox = Listbox(window)
-for item in list_s:
+for item in lst:
 	listbox.insert(END, item)
 listbox.pack()
 window.mainloop()

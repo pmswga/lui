@@ -6,6 +6,5 @@ Window {
 
     Label {
         caption: "Label caption"
-
     }
 }

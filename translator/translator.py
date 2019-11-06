@@ -3,27 +3,31 @@ from translator.lexer.lexer import *
 from translator.syntaxer import *
 from translator.generator import *
 
+
 class LuiTranslator:
     def __init__(self):
         self.code = ""
         self.lexer = Lexer()
         self.syntaxer = Syntaxer()
-        self.generator = TkGenerator(None, "")
+        self.generator = TkGenerator()
         self.is_debug = False
 
-    def debugTokens(self):
+    def debugLexer(self):
         print("\nTokens:\n")
         self.lexer.debug()
         print("\n")
 
-    def debugST(self):
+    def debugSyntaxer(self):
         print("\nSyntax tree:\n")
         self.syntaxer.debug()
         print("\n")
 
+    def debugTranslator(self):
+        self.generator.debug()
+
     def run(self):
         if self.code.find("#LUI") != -1:
-            self.lexer.user_code = self.code.split("#LUI")[0]
+            self.generator.user_code = self.code.split("#LUI")[0]
             self.lexer.lui_code = self.code.split("#LUI")[1]
         else:
             self.lexer.lui_code = self.code
@@ -35,16 +39,15 @@ class LuiTranslator:
         tokens = self.lexer.parse()
 
         if self.is_debug:
-            self.debugTokens()
+            self.debugLexer()
 
         self.syntaxer.tokens = tokens
         st = self.syntaxer.parse()
 
         if self.is_debug:
-            self.debugST()
+            self.debugSyntaxer()
 
-        self.generator.ast = st
-        self.generator.other_code = self.lexer.user_code
+        self.generator.st = st
         self.generator.generate()
 
         if self.is_debug:

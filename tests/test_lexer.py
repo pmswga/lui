@@ -5,45 +5,55 @@ from translator.lexer.lexer import *
 
 
 class TestLexer(unittest.TestCase):
+    def getCode(self, file):
+        lui_code = ""
 
-    def testParse(self):
-        with open("../examples/basic_1.lui") as f:
+        with open(file) as f:
             code = ""
             for line in f.readlines():
                 code += line
 
-        lexer = Lexer(code)
+        if code.find("#LUI") != -1:
+            user_code = code.split("#LUI")[0]
+            lui_code = code.split("#LUI")[1]
+        else:
+            lui_code = code
+
+        lui_code = re.sub("\n", " ", lui_code)
+        lui_code = re.sub("\t", " ", lui_code)
+        lui_code = re.sub(" +", " ", lui_code)
+        lui_code = lui_code.strip()
+
+        return lui_code
+
+    def testParse(self):
+        lexer = Lexer()
+        lexer.lui_code = self.getCode("../examples/basic_1.lui")
         tokens = lexer.parse()
 
         base_tokens = [
-            Token(TokenTypes.COMPONENT, "Window"),
-            Token(TokenTypes.OBRACE, "{"),
-            Token(TokenTypes.PROPERTY, "title:"),
-            Token(TokenTypes.VALUE, '"Window title"'),
-            Token(TokenTypes.PROPERTY, "width:"),
-            Token(TokenTypes.VALUE, 150),
-            Token(TokenTypes.PROPERTY, "height:"),
-            Token(TokenTypes.VALUE, 150),
-            Token(TokenTypes.CBRACE, "}"),
+            Token(TokenType.COMPONENT, "Window"),
+            Token(TokenType.OBRACE, "{"),
+            Token(TokenType.PROPERTY_NAME, "title"),
+            Token(TokenType.PROPERTY_STRING_VALUE, '"Window title"'),
+            Token(TokenType.PROPERTY_NAME, "width"),
+            Token(TokenType.PROPERTY_NUMBER_VALUE, 150),
+            Token(TokenType.PROPERTY_NAME, "height"),
+            Token(TokenType.PROPERTY_NUMBER_VALUE, 150),
+            Token(TokenType.CBRACE, "}"),
         ]
+        base_tokens.reverse()
 
-        self.assertEqual(len(tokens), len(base_tokens))
         for i in range(len(tokens)):
             self.assertEqual(tokens[i].type, base_tokens[i].type)
             self.assertEqual(tokens[i].data, base_tokens[i].data)
 
-
     def testGetTokens(self):
-        with open("../examples/basic_2.lui") as f:
-            code = ""
-            for line in f.readlines():
-                code += line
-
-        lexer = Lexer(code)
+        lexer = Lexer()
+        lexer.lui_code = self.getCode("../examples/basic_2.lui")
         tokens = lexer.parse()
 
         self.assertEqual(len(tokens), 14)
-
 
 
 unittest.main()

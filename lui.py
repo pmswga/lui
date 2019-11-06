@@ -18,6 +18,6 @@ if len(sys.argv) > 1:
 
         app.run()
     except Exception as e:
-        pass
+        print(e)
 else:
     app.helpCommand()
