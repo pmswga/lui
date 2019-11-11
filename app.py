@@ -21,8 +21,7 @@ class LuiApp:
 
         if filename is not None:
             with open(filename[1]) as f:
-                for line in f.readlines():
-                    self.code += line
+                self.code = f.read()
 
     def debugCommand(self):
         self.is_debug = not self.is_debug if True else False
