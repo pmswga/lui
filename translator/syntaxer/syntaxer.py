@@ -1,4 +1,5 @@
-from translator.lexer.token import TokenType
+from translator.syntaxer.syntax_error import *
+from translator.token import TokenType
 from translator.lui_definition import *
 
 
@@ -8,25 +9,27 @@ class ComponentNode:
         self.properties = {}
         self.components = []
 
-    def toString(self, i):
+    def toString(self, i=1):
         string = self.name
 
         for property in self.properties:
             string += "\n"
             for t in range(i):
                 string += "\t"
+
             string += "Property[" + str(self.properties[property]) + "]"
 
         for component in self.components:
             string += "\n"
             for t in range(i):
                 string += "\t"
+
             string += component.toString(i + 1)
 
         return string
 
     def __str__(self):
-        return self.toString(1)
+        return self.toString()
 
 
 class Syntaxer:
@@ -34,9 +37,17 @@ class Syntaxer:
         self.tokens = []
         self.st = ComponentNode("")
 
-    def error(self, code=None):
-        # print("LUI syntax error")
-        raise Exception("LUI syntax error")
+    def error(self, code=None, data=None):
+        message = "Syntax error: "
+
+        if code is SyntaxerError.UNCLOSED_BRACE:
+            message += "unclosed brace"
+        elif code is SyntaxerError.COMPONENT_NOT_EXISTS:
+            message += "component '" + data + "' is not exists"
+        elif code is SyntaxerError.PROPERTY_NOT_EXISTS:
+            message += "component '" + data[0] + "' doesn't have property '" + data[1] + "'"
+
+        raise Exception(message)
 
     def parseComponent(self, component):
         token = self.tokens.pop()
@@ -47,6 +58,10 @@ class Syntaxer:
 
         token = self.tokens.pop()
         while token.type is TokenType.COMPONENT:
+
+            if token.data not in components.keys():
+                self.error(SyntaxerError.COMPONENT_NOT_EXISTS, token.data)
+
             subComponent = ComponentNode(token.data)
 
             self.parseComponent(subComponent)
@@ -61,8 +76,14 @@ class Syntaxer:
             self.error()
 
     def parseProperty(self, component):
+
         token = self.tokens.pop()
         while token.type is TokenType.PROPERTY_NAME:
+
+            if token.data not in components.get(component.name):
+                self.error(SyntaxerError.PROPERTY_NOT_EXISTS, [component.name, token.data])
+
+
             property = token.data
 
             token = self.tokens.pop()
@@ -74,10 +95,27 @@ class Syntaxer:
 
         self.tokens.append(token)
 
+    def checkBraces(self):
+        countOBraces = 0
+        countCBraces = 0
+        tokens = self.tokens.copy()
+
+        for token in tokens:
+            if token.type is TokenType.OBRACE:
+                countOBraces += 1
+
+            if token.type is TokenType.CBRACE:
+                countCBraces += 1
+
+        return countOBraces == countCBraces
+
     def parse(self):
+        if not self.checkBraces():
+            self.error(SyntaxerError.UNCLOSED_BRACE)
+
         token = self.tokens.pop()
-        if token.type is not TokenType.COMPONENT or token.data not in components["windowComponent"].keys():
-            self.error()
+        if token.type is not TokenType.COMPONENT or token.data not in components.keys():
+            self.error(SyntaxerError.COMPONENT_NOT_EXISTS, token.data)
 
         self.st.name = token.data
 
@@ -89,6 +127,10 @@ class Syntaxer:
 
         token = self.tokens.pop()
         while token.type is TokenType.COMPONENT:
+
+            if token.data not in components.keys():
+                self.error(SyntaxerError.COMPONENT_NOT_EXISTS, token.data)
+
             component = ComponentNode(token.data)
 
             self.parseComponent(component)

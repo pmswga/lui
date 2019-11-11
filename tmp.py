@@ -7,9 +7,12 @@ window = Tk()
 window.title("Window app")
 window['width'] = 500
 window['height'] = 500
-label = Label(window)
-label['text'] = "List values"
-label.pack()
+label_1 = Label(window)
+label_1 ['text'] = "List values"
+label_1.pack()
+label_2 = Label(window)
+label_2 ['text'] = "list values"
+label_2.pack()
 listbox = Listbox(window)
 for item in lst:
 	listbox.insert(END, item)

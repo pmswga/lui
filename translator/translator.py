@@ -1,7 +1,7 @@
 
 from translator.lexer.lexer import *
-from translator.syntaxer import *
-from translator.generator import *
+from translator.syntaxer.syntaxer import *
+from translator.generator.generator import *
 
 
 class LuiTranslator:
@@ -13,12 +13,12 @@ class LuiTranslator:
         self.is_debug = False
 
     def debugLexer(self):
-        print("\nTokens:\n")
+        print("Tokens:")
         self.lexer.debug()
         print("\n")
 
     def debugSyntaxer(self):
-        print("\nSyntax tree:\n")
+        print("Syntax tree:")
         self.syntaxer.debug()
         print("\n")
 
@@ -50,5 +50,5 @@ class LuiTranslator:
         self.generator.st = st
         self.generator.generate()
 
-        if self.is_debug:
-            self.generator.debug()
+        #if self.is_debug:
+        #    self.generator.debug()

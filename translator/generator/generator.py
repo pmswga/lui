@@ -1,7 +1,5 @@
 # Generator
 
-from translator.syntaxer import ComponentNode
-
 
 # TODO: ПЕРЕПИСАТЬ ВСЁ К ЧЕРТЯМ СОБАЧИМ!
 
@@ -11,6 +9,7 @@ class TkGenerator:
         self.code = []
         self.locals = {}
         self.user_code = ""
+        self.components_counter = {}
 
     def debug(self):
         print("Locals:")
@@ -45,13 +44,13 @@ class TkGenerator:
         self.code.append("button.pack()")
 
     def genLabel(self, component):
-        self.code.append("label = Label(window)")
+        self.code.append("label_" + str(self.components_counter.get(component.name)) + " = Label(window)")
 
         for property in component.properties.keys():
             if property == "caption":
-                self.code.append("label['text'] = " + component.properties.get(property))
+                self.code.append("label_"  + str(self.components_counter.get(component.name)) +  " ['text'] = " + component.properties.get(property))
 
-        self.code.append("label.pack()")
+        self.code.append("label_" + str(self.components_counter.get(component.name)) + ".pack()")
 
     def genWindow(self):
 
@@ -66,6 +65,8 @@ class TkGenerator:
                 self.code.append("window['bg'] = " + str(self.st.properties[property]))
 
         for component in self.st.components:
+            self.components_counter[component.name] = self.components_counter.get(component.name, 0) + 1;
+
             if component.name == "Label":
                 self.genLabel(component)
             if component.name == "Button":

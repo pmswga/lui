@@ -1,7 +1,6 @@
 # @package lui Lexer
 
-from enum import Enum
-from translator.lexer.token import *
+from translator.token import *
 import re
 
 

@@ -12,6 +12,10 @@ Window {
         caption: "List values"
     }
 
+    Label {
+        caption: "list values"
+    }
+
     List {
         data: lst
     }
