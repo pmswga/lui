@@ -63,7 +63,7 @@
                             <div class="ui blue segment">
 <pre>
     Window {
-        title: "Window app"
+        title: "Hello Lui example"
 
         Label {
             caption: "Hello, Lui"
@@ -80,7 +80,7 @@
                             <div class="ui blue segment">
 <pre>
     win_caption = "Window app"
-    label_caption = "Hello, Lui"
+    label_caption = "Bind vars example"
 
     #LUI
 
@@ -90,6 +90,32 @@
         Label {
             caption: label_caption
         }
+    }
+</pre>
+                            </div>
+                        </div>
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            3. Bind lists
+                        </div>
+                        <div class="content">
+                            <div class="ui blue segment">
+<pre>
+    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    #LUI
+
+    Window {
+        title: "Bind list example"
+
+        Label {
+            caption: "My list"
+        }
+
+	List {
+	    data: lst
+	}
+
     }
 </pre>
                             </div>
