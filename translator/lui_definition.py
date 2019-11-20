@@ -2,6 +2,12 @@
 # LUI language definition
 #
 
+positions = [
+    "position",
+    "padding-x",
+    "padding-y"
+]
+
 components = {
     "Window": ["title", "width", "height"],
     "Grid": ["rows", "cols"],

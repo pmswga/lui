@@ -76,13 +76,11 @@ class Syntaxer:
             self.error()
 
     def parseProperty(self, component):
-
         token = self.tokens.pop()
         while token.type is TokenType.PROPERTY_NAME:
 
-            if token.data not in components.get(component.name):
+            if token.data not in components.get(component.name) and token.data not in positions:
                 self.error(SyntaxerError.PROPERTY_NOT_EXISTS, [component.name, token.data])
-
 
             property = token.data
 

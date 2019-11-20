@@ -34,10 +34,10 @@ class LuiApp:
         self.translator.code = self.code
         self.translator.is_debug = self.is_debug
 
-        try:
-            self.translator.run()
-        except Exception as e:
-            print(e)
+        #try:
+        self.translator.run()
+        #except Exception as e:
+        #    print(e)
 
     def exit(self):
         sys.exit(0)

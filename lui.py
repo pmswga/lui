@@ -2,7 +2,7 @@ from app import *
 
 app = LuiApp()
 if len(sys.argv) > 1:
-    try:
+    #try:
         for arg in sys.argv:
             if arg.find("--file=") != -1:
                 app.fileCommand(arg)
@@ -17,7 +17,7 @@ if len(sys.argv) > 1:
                 app.versionCommand()
 
         app.run()
-    except Exception as e:
-        print(e)
+    #except Exception as e:
+    #    print(e)
 else:
     app.helpCommand()

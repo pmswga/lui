@@ -1,4 +1,5 @@
 
+from preprocessor.preprocessor import *
 from translator.lexer.lexer import *
 from translator.syntaxer.syntaxer import *
 from translator.generator.generator import *
@@ -7,6 +8,7 @@ from translator.generator.generator import *
 class LuiTranslator:
     def __init__(self):
         self.code = ""
+        self.preprocessor = Preprocessor()
         self.lexer = Lexer()
         self.syntaxer = Syntaxer()
         self.generator = TkGenerator()
@@ -26,9 +28,14 @@ class LuiTranslator:
         self.generator.debug()
 
     def run(self):
-        if self.code.find("#LUI") != -1:
-            self.generator.user_code = self.code.split("#LUI")[0]
-            self.lexer.lui_code = self.code.split("#LUI")[1]
+        codes = self.code.split("#LUI")
+
+        self.preprocessor.user_code = codes[0]
+        self.preprocessor.exec()
+
+        if len(codes) > 0:
+            self.generator.user_code = codes[0]
+            self.lexer.lui_code = codes[1]
         else:
             self.lexer.lui_code = self.code
 
@@ -47,8 +54,12 @@ class LuiTranslator:
         if self.is_debug:
             self.debugSyntaxer()
 
+        self.generator.locals = self.preprocessor.vars
         self.generator.st = st
-        self.generator.generate()
+        code = self.generator.generate()
+
+        with open("tmp.py", "w") as f:
+            f.write("\n".join(code))
 
         #if self.is_debug:
         #    self.generator.debug()

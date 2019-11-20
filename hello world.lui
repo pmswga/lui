@@ -10,10 +10,12 @@ Window {
 
     Label {
         caption: "List values"
+        position: left
     }
 
     Label {
         caption: "list values"
+        position: right
     }
 
     List {

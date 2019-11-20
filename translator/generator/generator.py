@@ -1,5 +1,16 @@
 # Generator
 
+dicOfMatching = {
+    "x": "x",
+    "y": "y",
+    "width": "width",
+    "height": "height",
+    "caption": "text",
+    "background-color": "bg",
+    "position": "side"
+
+}
+
 
 # TODO: ПЕРЕПИСАТЬ ВСЁ К ЧЕРТЯМ СОБАЧИМ!
 
@@ -36,7 +47,6 @@ class TkGenerator:
         self.code.append("listbox.pack()")
 
     def genButton(self, component):
-
         self.code.append("button = Button(window)")
         for property in component.properties.keys():
             if property == "caption":
@@ -44,25 +54,29 @@ class TkGenerator:
         self.code.append("button.pack()")
 
     def genLabel(self, component):
-        self.code.append("label_" + str(self.components_counter.get(component.name)) + " = Label(window)")
+        component_name = "label_" + str(self.components_counter.get(component.name))
+        position_options = ""
 
+        self.code.append(component_name + " = Label(window)")
         for property in component.properties.keys():
-            if property == "caption":
-                self.code.append("label_"  + str(self.components_counter.get(component.name)) +  " ['text'] = " + component.properties.get(property))
+            if property == "position":
+                position_options = "side=" + component.properties.get(property).upper()
+            else:
+                self.code.append(component_name + "['" + dicOfMatching[property] + "'] = " + component.properties.get(property))
 
-        self.code.append("label_" + str(self.components_counter.get(component.name)) + ".pack()")
+
+        self.code.append(component_name + ".pack(" + position_options + ")")
 
     def genWindow(self):
+        component_name = "window"
 
         for property in self.st.properties.keys():
             if property == "title":
-                self.code.append("window.title(" + self.st.properties[property] + ")")
-            elif property == "width":
-                self.code.append("window['width'] = " + str(self.st.properties[property]))
-            elif property == "height":
-                self.code.append("window['height'] = " + str(self.st.properties[property]))
-            elif property == "background-color":
-                self.code.append("window['bg'] = " + str(self.st.properties[property]))
+                self.code.append(component_name + ".title(" + self.st.properties[property] + ")")
+            elif property == "position":
+                pass
+            else:
+                self.code.append(component_name + "['" + dicOfMatching[property] + "'] = " + str(self.st.properties[property]))
 
         for component in self.st.components:
             self.components_counter[component.name] = self.components_counter.get(component.name, 0) + 1;
@@ -76,21 +90,14 @@ class TkGenerator:
 
     def generate(self):
         if self.st is not None:
-            self.code.append(self.user_code)
-
-            exec("import sys")
-            exec("sys.path.append(\".\")")
-            exec(self.user_code)
-            self.locals = locals()
-
             self.code.append("from tkinter import *")
+            self.code.append(self.user_code)
             self.code.append("window = Tk()")
 
             self.genWindow()
 
             self.code.append("window.mainloop()")
 
-            with open("tmp.py", "w") as f:
-                f.write("\n".join(self.code))
+            return self.code
         else:
             raise Exception("Generate code error")
