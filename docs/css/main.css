@@ -3,18 +3,62 @@ h1, p {
     font-family: Open-Sans;
 }
 
-.lui-header {
-    display: flex;
-    margin: auto;
+
+/*!
+	background-color: #50514f;
+	background-color: #f25f5c;
+	background-color: #ffe066;
+	background-color: #247ba0;
+	background-color: #70c1b3;
+
+*/
+
+
+.ui.list {
+	margin: 0px;
 }
 
-.lui-header h1 {
-    margin-top: 10px;
-    text-align: center;
-    font-size: 32px;
-    font-style: italic;
+.centered {
+	text-align: center;
 }
 
-.lui-advantages h3 {
-    text-align: center;
+#releases {
+	border: 1px solid rgba(34, 36, 38, 0.15);
+	box-shadow: 0px 1px 2px 0 rgba(34, 36, 38, 0.15);
+}
+
+
+#left-menu .item:nth-child(2) {
+	
+}
+
+#left-menu .item:nth-child(3) {
+}
+
+#left-menu .item:nth-child(4) {
+}
+
+#yellob {
+	background-color: #ffe066;
+	color: black;
+}
+
+.content-section {
+	margin: 1em;
+}
+
+pre, code {
+  font-family: monospace, monospace;
+  background-color: #247ba0;
+  color: white;
+}
+
+pre {
+  overflow: auto;
+}
+
+pre > code {
+  display: block;
+  padding: 25px;
+  word-wrap: normal;
 }

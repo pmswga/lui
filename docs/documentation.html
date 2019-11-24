@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Lui | Documentation</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="css/semantic.css">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="css/semantic.js"></script>
+	</head>
+	<body>
+		<div class="ui grid stackable">
+			<div class="row">
+				<div class="sixteen wide column">
+					<div class="ui secondary pointing menu">
+						<div id="left-menu" class="left menu">
+							<a class="header item" href="index.html"><h2>Lui - language of ui</h2></a>
+							<a class="item" href="get_started.html">Get started</a>
+							<a class="active item" href="documentation.html">Documentation</a>
+							<a class="item" href="examples.html">Examples</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="sixteen wide column content-section">
+					<div class="ui stackable grid">
+						<div class="four wide column">
+							<fieldset class="ui segment">
+								<legend><h3>Table of contents</h3></legend>
+								<div class="ui big divided ordered list">
+									<div class="item">
+										<div>Forms</div>
+										<div class="list">
+											<a class="item" href="#window_component">Window</a>
+										</div>
+									</div>
+									<div class="item">
+										<div>Layouts</div>
+										<div class="list">
+											<div class="item">Frame</div>
+											<div class="item">Grid</div>
+										</div>
+									</div>
+									<div class="item">
+										<div>Input</div>
+										<div class="list">
+											<a class="item" href="#button_component">Button</a>
+											<div class="item">Radio</div>
+											<div class="item">Checkbox</div>
+											<div class="item">Spinbox</div>
+											<div class="item">Range</div>
+											<div class="item">Line</div>
+											<div class="item">Text</div>
+										</div>
+									</div>
+									<div class="item">
+										<div>Output</div>
+										<div class="list">
+											<a class="item" href="#label_component">Label</a>
+											<a class="item" href="#list_component">List</a>
+											<div class="item">Table</div>
+											<div class="item">Tree</div>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div class="twelve wide column">
+							<fieldset class="ui segment">
+								<legend><h3>Lui translator commands</h3></legend>
+								<p>
+									For work with lui.exe you need download them and add to PATH. At the moment lui.exe support next commands.
+								</p>
+								<table class="ui floated table">
+									<thead>
+										<tr>
+											<th>Comamnd</th>
+											<th>Description</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>--help</td>
+											<td>View all commands</td>
+										</tr>
+										<tr>
+											<td>--file=[filename]</td>
+											<td>Set *.lui file for generation</td>
+										</tr>
+										<tr>
+											<td>--debug</td>
+											<td>Turn on debug mode. On the each step of translation view a debug information</td>
+										</tr>
+										<tr>
+											<td>--version</td>
+											<td>View current version of Lui</td>
+										</tr>
+									</tbody>
+								</table>
+							</fieldset>
+							<fieldset class="ui segment">
+								<legend><h3>Lui #defines</h3></legend>
+								<p>
+									Lui defines are constants allows to Lui preprocessor understand where user code and other things.
+								</p>
+								<table class="ui floated table">
+									<thead>
+										<tr>
+											<th>Define</th>
+											<th>Description</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>#LUI</td>
+											<td>Split user and Lui code</td>
+										</tr>
+										<tr>
+											<td>#FILENAME ["filename"]</td>
+											<td>Set name of results Python file</td>
+										</tr>
+									</tbody>
+								</table>
+							</fieldset>
+							<fieldset class="ui segment">
+								<legend><h3>1 Forms</h3></legend>
+								<p>Any components allows you create are forms likes as basic window, dialog or messages</p>
+								<h4 id="window_component">1.1 Window</h4>
+								<section class="ui stackable grid">
+									<div class="row">
+										<div class="eight wide column">
+											<p>
+												It's the main component of any GUI
+											</p>
+								<pre><code>Window {
+	title: "Window caption"
+	width: 640
+	height: 640
+}</code></pre>
+										</div>
+										<div class="eight wide column">
+											<table class="ui floated table">
+												<thead>
+													<tr>
+														<th>Property</th>
+														<th>Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>title</td>
+														<td>Set title of window</td>
+													</tr>
+													<tr>
+														<td>width</td>
+														<td>Set width size of window</td>
+													</tr>
+													<tr>
+														<td>height</td>
+														<td>Set height size of window</td>
+													</tr>
+													<tr>
+														<td>background-color</td>
+														<td>Set background-color of window</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</fieldset>
+							<fieldset class="ui segment">
+								<legend><h3>3 Input</h3></legend>
+								<p>Groups of widgets allows you to input data by user.</p>
+								<h4 id="button_component">3.1 Button</h4>
+								<section class="ui stackable grid">
+									<div class="row">
+										<div class="eight wide column">
+											<p>
+												It's basic button
+											</p>
+								<pre><code>Button {
+	caption: "Button caption"
+}</code></pre>
+										</div>
+										<div class="eight wide column">
+											<table class="ui floated table">
+												<thead>
+													<tr>
+														<th>Property</th>
+														<th>Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>caption</td>
+														<td>Set text caption of button</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</fieldset>
+							<fieldset class="ui segment">
+								<legend><h3>4 Output</h3></legend>
+								<p>Groups of widgets allows you to output information from your variables</p>
+								<h4 id="label_component">4.1 Label</h4>
+								<section class="ui stackable grid">
+									<div class="row">
+										<div class="eight wide column">
+											<p>
+												It's simple label
+											</p>
+								<pre><code>Label {
+	caption: "Label caption"
+}</code></pre>
+										</div>
+										<div class="eight wide column">
+											<table class="ui floated table">
+												<thead>
+													<tr>
+														<th>Property</th>
+														<th>Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>caption</td>
+														<td>Set text caption of label</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+								<h4 id="list_component">4.2 List</h4>
+								<section class="ui stackable grid">
+									<div class="row">
+										<div class="eight wide column">
+											<p>
+												It's list widget. With list you can output your vars like as list, tuple.
+											</p>
+								<pre><code>List {
+	data: my_lst
+}</code></pre>
+										</div>
+										<div class="eight wide column">
+											<table class="ui floated table">
+												<thead>
+													<tr>
+														<th>Property</th>
+														<th>Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>data</td>
+														<td>Set any list for output</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+        <script type="text/javascript">
+
+            $('.ui.accordion').accordion();
+
+        </script>
+	
+	</body>
+</html>
