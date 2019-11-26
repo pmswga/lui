@@ -11,6 +11,7 @@ positions = [
 components = {
     "Window": ["title", "width", "height"],
     "Grid": ["rows", "cols"],
+    "Row": [],
     "Button": ["caption"],
     "Radio": [],
     "Checkbox": [],
