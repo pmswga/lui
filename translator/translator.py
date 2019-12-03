@@ -1,5 +1,5 @@
 
-from preprocessor.preprocessor import *
+from translator.preprocessor.preprocessor import *
 from translator.lexer.lexer import *
 from translator.syntaxer.syntaxer import *
 from translator.generator.generator import *

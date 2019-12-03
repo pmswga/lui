@@ -72,6 +72,7 @@ class Syntaxer:
         self.tokens.append(token)
 
         token = self.tokens.pop()
+        print(token)
         if token.type is not TokenType.CBRACE:
             self.error()
 

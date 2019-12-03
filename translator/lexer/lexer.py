@@ -13,7 +13,7 @@ class Lexer:
         return re.match("^[A-Z][a-z]+$", componentName) is not None
 
     def isProperty(self, property):
-        return re.match("^[a-z]+[a-z-]+:$", property) is not None
+        return re.match("^[a-z]*[a-z-]+:$", property) is not None
 
     def isPropertyNumberValue(self, propertyValue):
         return re.match("\d+", propertyValue) is not None
@@ -54,6 +54,8 @@ class Lexer:
                     self.tokens.append(Token(TokenType.PROPERTY_NUMBER_VALUE, int(token)))
                 elif self.isPropertyVarValue(token):
                     self.tokens.append(Token(TokenType.PROPERTY_VAR_VALUE, token))
+                else:
+                    print("WARNING: " + token)
 
                 token = ""
 

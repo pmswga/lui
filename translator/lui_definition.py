@@ -5,7 +5,9 @@
 positions = [
     "position",
     "padding-x",
-    "padding-y"
+    "padding-y",
+    "x",
+    "y"
 ]
 
 components = {
