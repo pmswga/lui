@@ -3,6 +3,7 @@ from translator.preprocessor.preprocessor import *
 from translator.lexer.lexer import *
 from translator.syntaxer.syntaxer import *
 from translator.generator.generator import *
+from translator.postprocessor.postprocessor import *
 
 
 class LuiTranslator:
@@ -12,6 +13,7 @@ class LuiTranslator:
         self.lexer = Lexer()
         self.syntaxer = Syntaxer()
         self.generator = TkGenerator()
+        self.postprocessor = Postprocessor()
         self.is_debug = False
 
     def debugLexer(self):
@@ -44,13 +46,9 @@ class LuiTranslator:
         self.generator.st = st
         code = self.generator.generate()
 
-        if "filename" in self.preprocessor.defines.keys():
-            filename = self.preprocessor.defines["filename"]
-        else:
-            filename = "tmp"
-
-        with open(filename + ".py", "w") as f:
-            f.write("\n".join(code))
-
         #if self.is_debug:
         #    self.generator.debug()
+
+        self.postprocessor.code = code
+        self.postprocessor.defines = self.preprocessor.defines
+        self.postprocessor.createFile()

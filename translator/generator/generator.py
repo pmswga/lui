@@ -1,6 +1,7 @@
 # Generator
 
-from translator.generator.ComponentGenerator.LabelComponentGenerator import *
+from translator.generator.ComponentGenerator.TkComponentGenerator import *
+from components.LabelComponent import *
 
 dicOfMatching = {
     "x": "x",
@@ -23,6 +24,7 @@ class TkGenerator:
         self.locals = {}
         self.user_code = ""
         self.components_counter = {}
+        self.tkGenerator = TkComponentGenerator()
 
     def debug(self):
         print("Locals:")
@@ -60,22 +62,8 @@ class TkGenerator:
         for property in component.properties.keys():
             label.__dict__[property] = component.properties.get(property)
 
-        labelGenerator = LabelComponentGenerator(label)
-        self.code.append(labelGenerator.generate())
-        """
-        component_name = "label_" + str(self.components_counter.get(component.name))
-        position_options = ""
-
-        self.code.append(component_name + " = Label(window)")
-        for property in component.properties.keys():
-            if property == "position":
-                position_options = "side=" + component.properties.get(property).upper()
-            else:
-                self.code.append(component_name + "['" + dicOfMatching[property] + "'] = " + component.properties.get(property))
-
-
-        self.code.append(component_name + ".pack(" + position_options + ")")
-        """
+        self.tkGenerator.component = label
+        self.code.append(self.tkGenerator.generate())
 
     def genWindow(self):
         component_name = "window"

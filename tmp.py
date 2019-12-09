@@ -7,7 +7,6 @@ window['height'] = 200
 button = Button(window)
 button['text'] = "Click"
 button.pack()
-label = Label()
 label['text'] = "It's mine label"
 label.pack()
 label.place(x=100,y=100)

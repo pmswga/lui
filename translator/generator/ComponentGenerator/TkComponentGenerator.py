@@ -1,12 +1,21 @@
-from translator.generator.ComponentGenerator.AbstractComponentGenerator import AbstractComponentGenerator
-from components.LabelComponent import LabelComponent
+from components import AbstractComponent
+from components import LabelComponent
 import re
 
-class LabelComponentGenerator(AbstractComponentGenerator):
-    def __init__(self, component: LabelComponent):
-        super().__init__(component)
-        self.code += self.component.name + " = Label()"
-        self.code += "\n"
+componentDictionary = {
+    "Label": "Label",
+    "Line": "Entry"
+}
+
+class TkComponentGenerator:
+    def __init__(self):
+        self.component = None
+        self.code = ""
+
+    def genInitial(self):
+        if type(self.component) is LabelComponent:
+            self.code += self.component.name + " = Label()"
+            self.code += "\n"
 
     def genProperties(self):
         properties = ""
