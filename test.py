@@ -1,18 +1,25 @@
 
-from tkinter import *
+from translator.preprocessor.preprocessor import *
 
-window = Tk()
+code = """
 
-label = Label()
-label['text'] = "Hello"
+a = [1,2,3]
+
+#LUI
+#FILENAME=window
+#VERSION=1.0
+
+Window {
+    title: "Hello"
+    width: 125
+    height: 125
+}
 
 
-print(label.keys())
+"""
 
-button = Button()
+pre = Preprocessor()
 
-label.pack(side=RIGHT, padx=2, pady=2)
-button.pack()
-
-window.mainloop()
+print(pre.parse(code))
+print(pre.defines)
 

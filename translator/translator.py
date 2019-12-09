@@ -28,29 +28,15 @@ class LuiTranslator:
         self.generator.debug()
 
     def run(self):
-        codes = self.code.split("#LUI")
-
-        self.preprocessor.user_code = codes[0]
+        self.generator.user_code, self.lexer.lui_code = self.preprocessor.parse(self.code)
         self.preprocessor.exec()
 
-        if len(codes) > 0:
-            self.generator.user_code = codes[0]
-            self.lexer.lui_code = codes[1]
-        else:
-            self.lexer.lui_code = self.code
-
-        self.lexer.lui_code = re.sub("\n", " ", self.lexer.lui_code)
-        self.lexer.lui_code = re.sub("\t", " ", self.lexer.lui_code)
-        self.lexer.lui_code = re.sub(" +", " ", self.lexer.lui_code)
-        self.lexer.lui_code = self.lexer.lui_code.strip()
         tokens = self.lexer.parse()
-
         if self.is_debug:
             self.debugLexer()
 
         self.syntaxer.tokens = tokens
         st = self.syntaxer.parse()
-
         if self.is_debug:
             self.debugSyntaxer()
 
@@ -58,7 +44,12 @@ class LuiTranslator:
         self.generator.st = st
         code = self.generator.generate()
 
-        with open("tmp.py", "w") as f:
+        if "filename" in self.preprocessor.defines.keys():
+            filename = self.preprocessor.defines["filename"]
+        else:
+            filename = "tmp"
+
+        with open(filename + ".py", "w") as f:
             f.write("\n".join(code))
 
         #if self.is_debug:

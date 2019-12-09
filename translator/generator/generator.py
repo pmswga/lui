@@ -1,6 +1,6 @@
 # Generator
 
-from translator.generator.ComponentGenerator import *
+from translator.generator.ComponentGenerator.LabelComponentGenerator import *
 
 dicOfMatching = {
     "x": "x",

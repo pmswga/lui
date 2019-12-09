@@ -1,6 +1,6 @@
 from translator.generator.ComponentGenerator.AbstractComponentGenerator import AbstractComponentGenerator
 from components.LabelComponent import LabelComponent
-
+import re
 
 class LabelComponentGenerator(AbstractComponentGenerator):
     def __init__(self, component: LabelComponent):
