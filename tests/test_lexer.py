@@ -1,6 +1,4 @@
-
 import unittest
-
 from translator.lexer.lexer import *
 
 
