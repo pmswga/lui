@@ -32,9 +32,6 @@ class TkGenerator:
         print("User code:")
         print(self.user_code)
 
-    def isList(self, lst):
-        return isinstance(lst, list)
-
     def getList(self, component):
 
         dataProperty = None
