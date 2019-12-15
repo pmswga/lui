@@ -7,6 +7,7 @@ componentDictionary = {
     "Line": "Entry"
 }
 
+
 class TkComponentGenerator:
     def __init__(self):
         self.component = None
@@ -24,10 +25,15 @@ class TkComponentGenerator:
 
         self.code += properties
 
-    def genLayout(self):
+    def genPackLayout(self):
         layout = ""
         layout += self.component.name + ".pack()"
         layout += "\n"
+
+        self.code += layout
+
+    def genPlaceLayout(self):
+        layout = ""
 
         layout += self.component.name + ".place("
 
@@ -56,7 +62,8 @@ class TkComponentGenerator:
     def generate(self):
         self.genInitial()
         self.genProperties()
-        self.genLayout()
+        self.genPackLayout()
+        self.genPlaceLayout()
 
         return self.code
 
