@@ -1,18 +1,31 @@
 
 Window {
 	title: "Window app"
-	width: 200
-	height: 200
+	width: 500
+	height: 500
 
-    Button {
-        caption: "Click"
+    Frame {
+        width: 200
+        height: 200
+        background-color: "red"
+
+        Button {
+            caption: "Click"
+            position: LEFT
+        }
+
+        Label {
+            x: 100
+            y: 100
+            caption: "It's mine label"
+        }
     }
 
     Label {
-        x: 100
-        y: 100
-        caption: "It's mine label"
+        caption: "Test"
+
     }
+
 
 
 }

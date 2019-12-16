@@ -7,13 +7,14 @@ positions = [
     "padding-x",
     "padding-y",
     "x",
-    "y"
+    "y",
+    "background-color"
 ]
 
 components = {
     "Window": ["title", "width", "height"],
     "Grid": ["rows", "cols"],
-    "Row": [],
+    "Frame": ["width", "height"],
     "Button": ["caption"],
     "Radio": [],
     "Checkbox": [],

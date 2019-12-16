@@ -1,7 +1,7 @@
 # Generator
 
 from translator.generator.ComponentGenerator.TkComponentGenerator import *
-from components.LabelComponent import *
+from components.OutputComponent import *
 
 dicOfMatching = {
     "x": "x",
@@ -14,11 +14,8 @@ dicOfMatching = {
 
 }
 
-
-# TODO: ПЕРЕПИСАТЬ ВСЁ К ЧЕРТЯМ СОБАЧИМ!
-
 class TkGenerator:
-    def __init__(self,):
+    def __init__(self, ):
         self.st = None
         self.code = []
         self.locals = {}
@@ -33,7 +30,6 @@ class TkGenerator:
         print(self.user_code)
 
     def getList(self, component):
-
         dataProperty = None
         for property in component.properties.keys():
             if property == "data":
@@ -47,51 +43,39 @@ class TkGenerator:
 
         self.code.append("listbox.pack()")
 
-    def genButton(self, component):
-        self.code.append("button = Button(window)")
+    def generateComponent(self, component, parent=None):
+        self.components_counter[component.name] = self.components_counter.get(component.name, 0) + 1
+        generatedComponent = TkComponentFactory.get(component.name)
+
+        generatedComponent.__dict__["component"] = component.name
+        generatedComponent.__dict__["name"] = component.name.lower() + "_" + str(self.components_counter[component.name])
+
         for property in component.properties.keys():
-            if property == "caption":
-                self.code.append("button['text'] = " + component.properties.get(property))
-        self.code.append("button.pack()")
+            generatedComponent.__dict__[property] = component.properties.get(property)
 
-    def genLabel(self, component):
-        label = LabelComponent()
-        for property in component.properties.keys():
-            label.__dict__[property] = component.properties.get(property)
+        if not isinstance(generatedComponent, WindowComponent):
+            tkGenerator = TkComponentGenerator(generatedComponent, parent)
+            self.code.append(tkGenerator.generate())
 
-        self.tkGenerator.component = label
-        self.code.append(self.tkGenerator.generate())
+        for subComponent in component.components:
+            parentComponent = TkComponentFactory.get(component.name)
+            parentComponent.name = component.name.lower() + "_" + str(self.components_counter[component.name])
 
-    def genWindow(self):
-        component_name = "window"
-
-        for property in self.st.properties.keys():
-            if property == "title":
-                self.code.append(component_name + ".title(" + self.st.properties[property] + ")")
-            elif property == "position":
-                pass
-            else:
-                self.code.append(component_name + "['" + dicOfMatching[property] + "'] = " + str(self.st.properties[property]))
-
-        for component in self.st.components:
-            self.components_counter[component.name] = self.components_counter.get(component.name, 0) + 1;
-
-            if component.name == "Label":
-                self.genLabel(component)
-            if component.name == "Button":
-                self.genButton(component)
-            if component.name == "List":
-                self.getList(component)
+            self.generateComponent(subComponent, parentComponent)
 
     def generate(self):
         if self.st is not None:
             self.code.append("from tkinter import *")
             self.code.append(self.user_code)
-            self.code.append("window = Tk()")
+            self.code.append("window_1 = Tk()")
 
-            self.genWindow()
+            if self.st.properties.get("title"):
+                self.code.append("window_1.title(" + self.st.properties.get("title") + ")")
 
-            self.code.append("window.mainloop()")
+            if len(self.st.components) > 0:
+                self.generateComponent(self.st)
+
+            self.code.append("window_1.mainloop()")
 
             return self.code
         else:

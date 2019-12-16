@@ -82,6 +82,7 @@ class Syntaxer:
             if token.data not in components.get(component.name) and token.data not in positions:
                 self.error(SyntaxerError.PROPERTY_NOT_EXISTS, [component.name, token.data])
 
+
             property = token.data
 
             token = self.tokens.pop()
