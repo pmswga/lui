@@ -12,7 +12,7 @@ Lui is a language of declarative writing of user interface with generating Tkint
 # Generate src-doc
 
 1) install [doxygen](https://www.doxygen.nl/index.html)
-2) on Windows open Doxywizard
+2) on Windows open Doxywizard and select Doxyfile in `src` folder
 3) on Linux change dir on root directory and typing `doxygen -w html new_header.html new_footer.html new_stylesheet.css YourConfigFile`
 
 # Documentation
