@@ -24,6 +24,33 @@ class TestLexer(unittest.TestCase):
 
         return lui_code
 
+    def testIsComponentName(self):
+        lexer = Lexer()
+
+        self.assertEqual(lexer.isComponentName("Window"), True);
+
+    def testIsPropertyName(self):
+        lexer = Lexer()
+
+        self.assertEqual(lexer.isPropertyName("width:"), True);
+
+
+    def testIsPropertyNumberValue(self):
+        lexer = Lexer()
+
+        self.assertEqual(lexer.isPropertyNumberValue("600"), True);
+
+
+    def testIsPropertyStringValue(self):
+        lexer = Lexer()
+
+        self.assertEqual(lexer.isPropertyStringValue("\"This is string\""), True);
+
+    def testIsPropertyVarValue(self):
+        lexer = Lexer()
+
+        self.assertEqual(lexer.isPropertyVarValue("title_var"), True);
+
     def testParse(self):
         lexer = Lexer()
         lexer.lui_code = self.getCode("../examples/basic_1.lui")
