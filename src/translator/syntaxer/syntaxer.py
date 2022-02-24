@@ -1,6 +1,7 @@
-from translator.syntaxer.syntax_error import *
-from translator.token import TokenType
-from translator.lui_definition import *
+from .syntax_error import *
+from ..token import TokenType
+from ..lui_definition import *
+
 
 
 class ComponentNode:

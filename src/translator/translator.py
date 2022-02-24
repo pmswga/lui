@@ -1,13 +1,20 @@
 
-from translator.preprocessor.preprocessor import *
-from translator.lexer.lexer import *
-from translator.syntaxer.syntaxer import *
-from translator.generator.generator import *
-from translator.postprocessor.postprocessor import *
+from .preprocessor import *
+from .lexer import *
+from .syntaxer import *
+from .generator import *
+from .postprocessor import *
 
 
 class LuiTranslator:
     def __init__(self):
+        '''
+        Constructor.
+
+        Returns:
+            void
+        '''
+        
         self.code = ""
         self.preprocessor = Preprocessor()
         self.lexer = Lexer()
@@ -17,19 +24,47 @@ class LuiTranslator:
         self.is_debug = False
 
     def debugLexer(self):
+        '''
+        Print list of tokens.
+
+        Returns:
+            void
+        '''
+    
         print("Tokens:")
         self.lexer.debug()
         print("\n")
 
     def debugSyntaxer(self):
+        '''
+        Print syntax tree.
+
+        Returns:
+            void
+        '''
+    
         print("Syntax tree:")
         self.syntaxer.debug()
         print("\n")
 
     def debugTranslator(self):
+        '''
+        Print users code.
+
+        Returns:
+            void
+        '''
+    
         self.generator.debug()
 
     def run(self):
+        '''
+        Run translator.
+
+        Returns:
+            void
+        '''
+    
         self.generator.user_code, self.lexer.lui_code = self.preprocessor.parse(self.code)
         self.preprocessor.exec()
 

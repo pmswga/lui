@@ -1,5 +1,5 @@
 import unittest
-from translator.lexer.lexer import *
+from src.translator.lexer.lexer import *
 
 
 class TestLexer(unittest.TestCase):

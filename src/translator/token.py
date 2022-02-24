@@ -13,8 +13,22 @@ class TokenType(Enum):
 
 class Token:
     def __init__(self, type, data):
+        '''
+        Constructor.
+
+        Returns:
+            void
+        '''
+    
         self.type = type
         self.data = data
 
     def __str__(self):
+        '''
+        Get string representation.
+
+        Returns:
+            string
+        '''
+        
         return "<" + str(self.type) + ", " + str(self.data) + ">"

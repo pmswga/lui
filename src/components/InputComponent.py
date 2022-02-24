@@ -1,4 +1,4 @@
-from components.AbstractComponent import *
+from .AbstractComponent import *
 
 
 class ButtonComponent(AbstractComponent):

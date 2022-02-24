@@ -1,7 +1,7 @@
-from components.FormComponent import *
-from components.LayoutComponent import *
-from components.InputComponent import *
-from components.OutputComponent import *
+from src.components.FormComponent import *
+from src.components.LayoutComponent import *
+from src.components.InputComponent import *
+from src.components.OutputComponent import *
 import re
 
 componentDictionary = {
@@ -143,3 +143,4 @@ class TkComponentGenerator:
 
     def __getitem__(self, item):
         return self.__dict__[item]
+

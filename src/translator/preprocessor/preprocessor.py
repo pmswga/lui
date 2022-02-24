@@ -3,11 +3,28 @@ import re
 
 class Preprocessor:
     def __init__(self):
+        '''
+        Constructor.
+
+        Returns:
+            void
+        '''
+        
         self.user_code = ""
         self.defines = {}
         self.vars = {}
 
     def parse(self, code):
+        '''
+        Split code on user and lui code.
+
+        Parameters:
+            code - source code of .lui file
+
+        Returns:
+            string
+        '''
+        
         lui_code = ""
 
         filename_def = re.search("#FILENAME=\S+", code)
@@ -42,6 +59,13 @@ class Preprocessor:
         return self.user_code, lui_code
 
     def exec(self):
+        '''
+        Execute user code.
+
+        Returns:
+            void
+        '''
+        
         if len(self.user_code) != 0:
             code = "import sys"
             code += '\n'

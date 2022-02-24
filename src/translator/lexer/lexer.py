@@ -1,6 +1,6 @@
 # @package lui Lexer
 
-from translator.token import *
+from ..token import *
 import re
 
 
@@ -30,18 +30,18 @@ class Lexer:
         isQuotes = False
         for c in self.lui_code:
 
-            if c is "{":
+            if c == "{":
                 self.tokens.append(Token(TokenType.OBRACE, "{"))
                 token = ""
 
-            if c is "}":
+            if c == "}":
                 self.tokens.append(Token(TokenType.CBRACE, "}"))
                 token = ""
 
-            if c is "\"":
+            if c == "\"":
                 isQuotes = not isQuotes if True else False
 
-            if not isQuotes and c is " ":
+            if not isQuotes and c == " ":
                 token = token.lstrip(" ")
 
                 if self.isComponentName(token):
@@ -67,3 +67,6 @@ class Lexer:
         tokens.reverse()
         for token in tokens:
             print(token)
+
+if __name__ == "__main__":
+    pass

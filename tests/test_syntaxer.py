@@ -1,6 +1,6 @@
 import unittest
-from translator.token import *
-from translator.syntaxer.syntaxer import *
+from src.translator.token import *
+from src.translator.syntaxer.syntaxer import *
 
 class TestSyntaxer(unittest.TestCase):
     def testGetST(self):

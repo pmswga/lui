@@ -1,4 +1,4 @@
-from components.AbstractComponent import AbstractComponent
+from .AbstractComponent import AbstractComponent
 
 
 class LabelComponent (AbstractComponent):
