@@ -2,6 +2,7 @@ import unittest
 from src.translator.token import *
 from src.translator.syntaxer.syntaxer import *
 
+
 class TestSyntaxer(unittest.TestCase):
     def testGetST(self):
         base_tokens = [
@@ -50,4 +51,5 @@ class TestSyntaxer(unittest.TestCase):
             self.assertEqual(str(e), "Syntax error: unclosed brace")
 
 
-unittest.main()
+if __name__ == "__main__":
+    unittest.main()

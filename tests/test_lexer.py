@@ -27,29 +27,27 @@ class TestLexer(unittest.TestCase):
     def testIsComponentName(self):
         lexer = Lexer()
 
-        self.assertEqual(lexer.isComponentName("Window"), True);
+        self.assertEqual(lexer.isComponentName("Window"), True)
 
     def testIsPropertyName(self):
         lexer = Lexer()
 
-        self.assertEqual(lexer.isPropertyName("width:"), True);
-
+        self.assertEqual(lexer.isPropertyName("width:"), True)
 
     def testIsPropertyNumberValue(self):
         lexer = Lexer()
 
-        self.assertEqual(lexer.isPropertyNumberValue("600"), True);
-
+        self.assertEqual(lexer.isPropertyNumberValue("600"), True)
 
     def testIsPropertyStringValue(self):
         lexer = Lexer()
 
-        self.assertEqual(lexer.isPropertyStringValue("\"This is string\""), True);
+        self.assertEqual(lexer.isPropertyStringValue('"This is string"'), True)
 
     def testIsPropertyVarValue(self):
         lexer = Lexer()
 
-        self.assertEqual(lexer.isPropertyVarValue("title_var"), True);
+        self.assertEqual(lexer.isPropertyVarValue("title_var"), True)
 
     def testParse(self):
         lexer = Lexer()
@@ -81,4 +79,5 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(len(tokens), 14)
 
 
-unittest.main()
+if __name__ == "__main__":
+    unittest.main()
