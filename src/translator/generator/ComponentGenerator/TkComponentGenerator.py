@@ -1,7 +1,7 @@
-from src.components.FormComponent import *
-from src.components.LayoutComponent import *
-from src.components.InputComponent import *
-from src.components.OutputComponent import *
+from components.FormComponent import *
+from components.LayoutComponent import *
+from components.InputComponent import *
+from components.OutputComponent import *
 import re
 
 componentDictionary = {

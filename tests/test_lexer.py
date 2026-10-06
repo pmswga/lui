@@ -1,5 +1,5 @@
 import unittest
-from src.translator.lexer.lexer import *
+from translator.lexer.lexer import *
 
 
 class TestLexer(unittest.TestCase):
@@ -51,7 +51,7 @@ class TestLexer(unittest.TestCase):
 
     def testParse(self):
         lexer = Lexer()
-        lexer.lui_code = self.getCode("../examples/basic_1.lui")
+        lexer.lui_code = self.getCode("./examples/basic_1.lui")
         tokens = lexer.parse()
 
         base_tokens = [
@@ -73,7 +73,7 @@ class TestLexer(unittest.TestCase):
 
     def testGetTokens(self):
         lexer = Lexer()
-        lexer.lui_code = self.getCode("../examples/basic_2.lui")
+        lexer.lui_code = self.getCode("./examples/basic_2.lui")
         tokens = lexer.parse()
 
         self.assertEqual(len(tokens), 14)

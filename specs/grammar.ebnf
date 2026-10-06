@@ -1,0 +1,27 @@
+(* LUI grammar EBNF *)
+
+(* Main grammar *)
+grammar = mainComponent , "{" , {property} , {component} , "}";
+
+mainComponent = "Window" | "Dialog";
+
+component = componentName , "{" , {property} , {component} , "}";
+componentName = {string | symbols};
+
+(* Properties *)
+property = propertyName , ":", propertyValue , eof;
+propertyName = {ascii_char | symbols};
+propertyValue = '"' , {string} , '"' | number;
+
+(* Basic defs *)
+string = ascii_char, {ascii_char | ascii_symbol};
+number = digit , {digit};
+
+eof = '\n';
+symbols = '-' | '_' | ' ';
+
+ascii_char = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+
+ascii_symbol = "-" | "_" | " " | "-" | "+" | "*" | "/" | "=" | "_" | "(" | ")" | "[" | "]" | "{" | "}" | "<" | ">" | "&" | "^" | "%" | "$" | "#" | "@" | "!" | "\\" | "|" | ";" | ":" | "~" | "," | "." | "`" | "\"" | "'";
+
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";

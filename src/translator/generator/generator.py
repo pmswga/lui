@@ -1,7 +1,7 @@
 # Generator
 
 from .ComponentGenerator.TkComponentGenerator import *
-from src.components.OutputComponent import *
+from components.OutputComponent import *
 
 dicOfMatching = {
     "x": "x",
