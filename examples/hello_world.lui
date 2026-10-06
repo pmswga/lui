@@ -1,4 +1,3 @@
-
 Window {
 	title: "Window app"
 	width: 500
@@ -23,9 +22,6 @@ Window {
 
     Label {
         caption: "Test"
-
     }
-
-
 
 }
