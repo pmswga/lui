@@ -3,6 +3,21 @@ h1, p {
     font-family: Open-Sans;
 }
 
+body {
+    font-size: 16px;
+}
+
+p {
+    font-size: 1.2em;
+    line-height: 1.7;
+}
+
+.content-section li,
+.content-section td {
+    font-size: 1.1em;
+    line-height: 1.65;
+}
+
 
 /*!
 	background-color: #50514f;
@@ -49,12 +64,13 @@ h1, p {
 
 pre, code {
   font-family: monospace, monospace;
-  background-color: #247ba0;
-  color: white;
+  background-color: #2d3238;
+  color: #d7dce2;
 }
 
 pre {
   overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 pre > code {

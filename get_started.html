@@ -7,6 +7,56 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="css/semantic.js"></script>
+		<style>
+			.code-block { position: relative; }
+			.ui.button.copy-btn {
+				position: absolute;
+				top: 8px;
+				right: 8px;
+				z-index: 10;
+				margin: 0;
+				border: 1px solid white !important;
+				color: white !important;
+				background: rgba(255, 255, 255, 0.1) !important;
+				box-shadow: none !important;
+				text-shadow: none !important;
+			}
+			.ui.button.copy-btn:hover,
+			.ui.button.copy-btn:active,
+			.ui.button.copy-btn:focus {
+				color: white !important;
+				border-color: white !important;
+				background: rgba(255, 255, 255, 0.2) !important;
+				box-shadow: none !important;
+				text-shadow: none !important;
+			}
+			pre.line-numbers { counter-reset: linenum; }
+			pre.line-numbers code {
+				padding: 18px 22px;
+			}
+			pre.line-numbers .line::before {
+				counter-increment: linenum;
+				content: counter(linenum);
+				display: inline-block;
+				min-width: 2em;
+				margin-right: 1em;
+				text-align: right;
+				color: #707a84;
+				user-select: none;
+				-webkit-user-select: none;
+			}
+			pre.line-numbers.shell-prompt .line::before {
+				content: "$";
+				counter-increment: none;
+				font-weight: 700;
+			}
+			.tok-keyword   { color: #f25f5c; font-weight: 600; }
+			.tok-string    { color: #70c1b3; }
+			.tok-number    { color: #ffe066; }
+			.tok-property  { color: #6fb3d0; }
+			.tok-comment   { color: #8a919c; font-style: italic; }
+			.tok-directive { color: #ffe066; font-weight: 700; }
+		</style>
 	</head>
 	<body>
 		<div class="ui grid stackable">
@@ -16,7 +66,7 @@
 						<div id="left-menu" class="left menu">
 							<a class="header item" href="index.html"><h2>Lui - language of ui</h2></a>
 							<a class="active item" href="get_started.html">Get started</a>
-							<a class="item" href="documentation.html">Documentation</a>
+							<a class="item" href="component_reference.html">Components reference</a>
 							<a class="item" href="examples.html">Examples</a>
 						</div>
 					</div>
@@ -62,18 +112,24 @@
 								<p>
 									After download you need imagine what are you want to get. For example type the next code. Save into file "hello.lui".
 								</p>
-								<pre><code>Window {
+								<div class="code-block">
+									<button class="ui tiny basic button copy-btn" type="button">Copy</button>
+									<pre class="line-numbers"><code>Window {
 	title: "Hello Lui"
 	width: 150
 	height: 150
 }</code></pre>
+								</div>
 							</fieldset>
 							<fieldset class="ui segment">
 								<legend><h3 id="create_file_step">3 Create Python file</h3></legend>
 								<p>
 									For creating a Python file you need open cmd, then change current dir. Type the command. After execution will be created Python file 				
 								</p>
-								<pre><code>:> lui --file="hello.lui"</code></pre>
+								<div class="code-block">
+									<button class="ui tiny basic button copy-btn" type="button">Copy</button>
+									<pre class="line-numbers shell-prompt"><code>lui --file="hello.lui"</code></pre>
+								</div>
 							</fieldset>
 							<fieldset class="ui segment">
 								<legend><h3 id="run_step">4 Run the created file</h3></legend>
@@ -86,5 +142,108 @@
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript">
+
+			function copyCode(button) {
+				var pre = $(button).closest('.code-block').find('pre')[0];
+				if (!pre) return;
+
+				var lines = (pre.textContent || pre.innerText || '').split('\n');
+				while (lines.length && lines[0].trim() === '') lines.shift();
+				while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+				var text = lines.join('\n');
+
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(text).then(function () {
+						showCopied(button);
+					}, function () {
+						legacyCopy(button, text);
+					});
+				} else {
+					legacyCopy(button, text);
+				}
+			}
+
+			function legacyCopy(button, text) {
+				var textarea = document.createElement('textarea');
+				textarea.value = text;
+				textarea.style.position = 'fixed';
+				textarea.style.opacity = '0';
+				document.body.appendChild(textarea);
+				textarea.focus();
+				textarea.select();
+				try {
+					document.execCommand('copy');
+					showCopied(button);
+				} catch (e) {
+					alert('Unable to copy the code: ' + e);
+				}
+				document.body.removeChild(textarea);
+			}
+
+			function showCopied(button) {
+				var $btn = $(button);
+				var original = $btn.html();
+				$btn.html('<i class="checkmark icon"></i> Copied!');
+				setTimeout(function () {
+					$btn.html(original);
+				}, 2000);
+			}
+
+			function escapeHtml(text) {
+				var div = document.createElement('div');
+				div.appendChild(document.createTextNode(text));
+				return div.innerHTML;
+			}
+
+			var TOKEN_REGEX = /("(?:[^"\\\n]|\\.)*")|(\b\d+(?:\.\d+)?\b)|(\b(?:Window|Label|Button|Input|Frame|List)\b)|(\b(?:title|caption|width|height|x|y|data|placeholder|font-size|font-family|color|background-color|position|border|align)\b(?=\s*:))|(#[^\n]*)/g;
+
+			function highlightLine(line) {
+				if (/^\s*#LUI\s*$/.test(line)) {
+					return '<span class="tok-directive">' + escapeHtml(line) + '</span>';
+				}
+				var html = '';
+				var lastIndex = 0;
+				TOKEN_REGEX.lastIndex = 0;
+				var m;
+				while ((m = TOKEN_REGEX.exec(line)) !== null) {
+					if (m.index > lastIndex) {
+						html += escapeHtml(line.substring(lastIndex, m.index));
+					}
+					if (m[1]) html += '<span class="tok-string">' + m[1] + '</span>';
+					else if (m[2]) html += '<span class="tok-number">' + m[2] + '</span>';
+					else if (m[3]) html += '<span class="tok-keyword">' + m[3] + '</span>';
+					else if (m[4]) html += '<span class="tok-property">' + m[4] + '</span>';
+					else if (m[5]) html += '<span class="tok-comment">' + escapeHtml(m[5]) + '</span>';
+					lastIndex = m.index + m[0].length;
+				}
+				if (lastIndex < line.length) {
+					html += escapeHtml(line.substring(lastIndex));
+				}
+				return html;
+			}
+
+			function addLineNumbers() {
+				$('pre.line-numbers code').each(function () {
+					var $code = $(this);
+					if ($code.data('numbered')) return;
+					var lines = ($code.text() || '').split('\n');
+					var html = '';
+					for (var i = 0; i < lines.length; i++) {
+						if (i > 0) html += '\n';
+						html += '<span class="line">' + highlightLine(lines[i]) + '</span>';
+					}
+					$code.html(html);
+					$code.data('numbered', true);
+				});
+			}
+
+			addLineNumbers();
+
+			$('.copy-btn').on('click', function () {
+				copyCode(this);
+			});
+
+		</script>
 	</body>
 </html>
