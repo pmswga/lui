@@ -1,0 +1,10 @@
+[project]
+name = "lui"
+version = "0.1"
+description = "Lui is a declarative language for creating user interfaces in Python"
+url = "https://github.com/pmsgwa/lui"
+author = "Sergey"
+author_email = "pmswga@gmail.com"
+
+[tool.bandit]
+exclude_dirs = ["tests","examples", "venv", ".venv"]
