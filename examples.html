@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Lui | Examples</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="css/semantic.css">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="css/semantic.js"></script>
+	</head>
+	<body>
+		<div class="ui grid stackable">
+			<div class="row">
+				<div class="sixteen wide column">
+					<div class="ui secondary pointing menu">
+						<div id="left-menu" class="left menu">
+							<a class="header item" href="index.html"><h2>Lui - language of ui</h2></a>
+							<a class="item" href="get_started.html">Get started</a>
+							<a class="item" href="documentation.html">Documentation</a>
+							<a class="active item" href="examples.html">Examples</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="sixteen wide column content-section">
+					<div class="ui stackable grid">
+						<div class="four wide column">
+							<fieldset class="ui fluid vertical ordered steps">
+								<legend><h3>Table of contents</h3></legend>
+								<div class="step">
+									<div class="content">
+										<a class="title" href="#hello_world_example">Hello Lui</a>
+									</div>
+								</div>
+								<div class="step">
+									<div class="content">
+										<a class="title" href="#bind_var_example">Bind var</a>
+									</div>
+								</div>
+								<div class="step">
+									<div class="content">
+										<a class="title" href="#bind_list_example">Bind list</a>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+						<div class="twelve wide column">
+							<fieldset class="ui segment">
+								<legend><h3 id="hello_world_example">Example #1. Hello Lui</h3></legend>
+								<p>
+									Hello World app with Lui.
+								</p>
+								<pre><code>Window {
+	title: "Window app"
+	width: 640
+	height: 640
+	
+	Label {
+		caption: "Hello Lui"
+	}
+}</code></pre>
+							</fieldset>
+							<fieldset class="ui segment">
+								<legend><h3 id="bind_var_example">Example #2. Bind var</h3></legend>
+								<p>
+									Bind var with property of component.
+								</p>
+								<pre><code>win_caption = "Window app"
+label_caption = "Bind vars example"
+
+#LUI
+
+Window {
+	title: win_caption
+
+	Label {
+		caption: label_caption
+	}
+}</code></pre>
+							</fieldset>
+							<fieldset class="ui segment">
+								<legend><h3 id="bind_list_example">Example #3. Bind list</h3></legend>
+								<p>
+									Bind list with property data of List component.
+								</p>
+								<pre><code>lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+								
+#LUI
+
+Window {
+	title: "Bind list example"
+
+	Label {
+		caption: "My list"
+	}
+
+	List {
+		data: lst
+	}
+}</code></pre>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
