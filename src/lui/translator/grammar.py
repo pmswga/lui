@@ -1,0 +1,33 @@
+GRAMMAR = r"""
+?start: grammar
+
+grammar: main_component "{" property* component* "}"
+
+main_component: WINDOW | DIALOG 
+
+component: component_name "{" property* component* "}"
+
+component_name: (LETTER | SYMBOL)+
+
+property: property_name ":" property_value NEWLINE
+
+property_name: (LETTER | SYMBOL)+
+
+property_value: QUOTED_STRING | NUMBER
+
+
+// Main components
+WINDOW: "Window"
+DIALOG: "Dialog"
+
+// Tokens
+LETTER: /[a-zA-Z]+/
+SYMBOL: /[-_+*\/=()[\]{}<>&^%$#@!\\|;:~,.'` ]/
+NUMBER: /[0-9]+/
+QUOTED_STRING: /"[^"]*"/
+
+%import common.NEWLINE
+%import common.WS
+
+%ignore WS
+"""
