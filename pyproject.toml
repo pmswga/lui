@@ -14,4 +14,4 @@ authors = [
 homepage = "https://github.com/pmsgwa/lui"
 
 [tool.bandit]
-exclude_dirs = ["tests","examples", "venv", ".venv"]
+exclude_dirs = ["tests","examples", "venv", ".venv", ".hypothesis", ".pytest_cache"]
